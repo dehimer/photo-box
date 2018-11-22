@@ -1,3 +1,3 @@
 rimraf 'photos/*'
-rimraf 'public/images/photos/*'
+rimraf 'images/*'
 rimraf 'db/*'
