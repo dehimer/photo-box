@@ -1,49 +1,19 @@
 const express = require('express');
 const NeDB = require('nedb');
 const socketIO = require('socket.io');
-const gm = require('gm');
-const fs = require('fs');
 const http = require('http');
 const path = require('path');
 const config = require('../../config/config');
+const watcher = require('./watcher');
 
 
 // DB
-const dbStat = new NeDB({ filename: 'db/stat.db', autoload: true });
-const dbPhoto = new NeDB({ filename: 'db/photo.db', autoload: true });
+// const dbStats = new NeDB({ filename: 'db/stat.db', autoload: true });
+const dbPhotos = new NeDB({ filename: 'db/photo.db', autoload: true });
 
-dbPhoto.find({}).exec((err, docs) => {
+dbPhotos.find({}).exec((err, docs) => {
   const count = docs.length || 0;
   console.log(`Found ${count} photos`);
-});
-
-
-// DIRS
-const dirs = ['images/', 'images/standart', 'images/thumbnail'];
-const sources = config.sources.map((oldSource) => {
-  const source = { ...oldSource };
-  dirs.push(source.watchpath);
-
-  if (source.frame) {
-    gm(source.frame).size((err, value) => {
-      if (err) return;
-
-      source.frameWidth = value.width;
-      source.frameHeight = value.height;
-    });
-  }
-
-  dbPhoto.count({ label: source.label }, (err, count) => {
-    source.lastNum = count;
-  });
-
-  return source;
-});
-
-dirs.forEach((dir) => {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
-  }
 });
 
 
@@ -65,26 +35,23 @@ server.listen(port, () => {
 const io = socketIO();
 io.attach(server);
 
+const syncPhotos = (socket) => {
+  dbPhotos.find({}).exec((err, docs) => {
+    socket.emit('action', { type: 'photos', data: docs });
+  });
+};
+
 io.on('connection', (socket) => {
   socket.emit('action', { type: 'config', data: config });
+  syncPhotos(socket);
+
   /*
-  dbPhoto.find({}).sort({ date: -1 }).limit(config.imagesPerPage).exec((err, photos) => {
-    socket.emit('list', photos);
-  });
-
-  socket.on('print', function(data){
-    console.log('PRINT', data);
-    for (var i = 0; i < data.length; i+=2) {
-
-      var photo1 = __dirname+'/images/'+data[i];
-      var photo2;
-      if (i + 1 >= data.length) {
-        photo2 = __dirname+'/images/'+data[i];
-      } else {
-        photo2 = __dirname+'/images/'+data[i+1];
+  socket.on('action', async (action) => {
+    switch (action.type) {
+      case 'server/ACTION_TYPE': {
+        io.sockets.emit('action', {type: 'players_update_ts', data: +(new Date())})
       }
-
-      print2Photo(photo1, photo2);
+        break;
     }
   });
   */

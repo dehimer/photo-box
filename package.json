@@ -1,5 +1,5 @@
 {
-  "name": "alice-cooper-photo",
+  "name": "photo-box",
   "version": "1.0.0",
   "description": "",
   "main": "src/server/index.js",
@@ -16,7 +16,9 @@
     "babel-polyfill": "^6.26.0",
     "express": "^4.16.3",
     "gm": "^1.23.1",
+    "hound": "^1.0.5",
     "nedb": "^1.8.0",
+    "prop-types": "^15.6.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-redux": "^5.1.1",
