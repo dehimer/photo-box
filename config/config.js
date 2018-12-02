@@ -21,10 +21,18 @@ const config = {
     }
   ],
 
+  thumbnail: {
+    width: 300,
+    height: 200
+  },
+
   deleteAfterImport: true,
   useWatchFile: false,
 
+  imagesPerPage: 200,
   viewerCloseAfter: 35,
+
+  photoHostUrl: 'http://zzhkg.silkroadcg.top',
 
   uploadUrl: 'http://zzhkg.silkroadcg.top/uploader.php'
 };

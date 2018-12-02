@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Gallery from 'components/Gallery';
-import Viewer from 'components/Viewer';
+import Gallery from 'components/Gallery/index';
+import Viewer from 'components/Viewer/index';
 
 
 export default () => (

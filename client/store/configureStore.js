@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import io from 'socket.io-client';
 import createSocketIoMiddleware from 'redux-socket.io';
-import { rootReducer } from '../reducers';
+import { rootReducer } from '../reducers/index';
 
 // eslint-disable-next-line no-restricted-globals
 const socket = io(`http://${location.host}`);
@@ -16,7 +16,7 @@ export default function configureStore() {
     // Enable Webpack hot module replacement for reducers
     module.hot.accept('../reducers', () => {
       // eslint-disable-next-line global-require
-      store.replaceReducer(require('../reducers').rootReducer);
+      store.replaceReducer(require('../reducers/index').rootReducer);
     });
   }
 
