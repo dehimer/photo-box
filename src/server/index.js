@@ -6,7 +6,7 @@ const NeDB = require('nedb');
 const socketIO = require('socket.io');
 const http = require('http');
 const path = require('path');
-const config = require('../config/config');
+const config = require('../../config/config');
 const watcher = require('./watcher');
 
 const can = new Emitter();
@@ -38,11 +38,11 @@ io.on('connection', (socket) => {
 // DB
 const db = {
   stats: new NeDB({
-    filename: 'db/stat.db',
+    filename: 'db/stats.db',
     autoload: true
   }),
   photos: new NeDB({
-    filename: 'db/photo.db',
+    filename: 'db/photos.db',
     autoload: true
   })
 };
