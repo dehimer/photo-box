@@ -13,11 +13,24 @@ const can = new Emitter();
 
 
 // HTTP
-const port = config.port || 3000;
+const port = config.port || 8080;
 const app = express();
 const server = http.createServer(app);
 
 app.use(express.static('dist'));
+/*
+if (process.env.NODE_ENV === 'production') {
+} else {
+  // Exprees will serve up production assets
+  app.use(express.static('client/build'));
+
+  // Express serve up index.html file if it doesn't recognize route
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  });
+}
+*/
+
 app.use(express.static(path.join(__dirname, 'images')));
 
 

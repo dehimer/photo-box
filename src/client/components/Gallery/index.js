@@ -7,11 +7,12 @@ import PropTypes from 'prop-types';
 const Gallery = ({ config, photos }) => (
   <div>
     {
-      config.sources.map(() => (
-        <div className="panel">
+      config.sources && config.sources.map(({ label }) => (
+        <div key={label} className="panel">
+          { label }
           {
             photos.map(photo => (
-              <Link to={`/view/${photo.id}`}>
+              <Link key={photo.id} to={`/view/${photo.id}`}>
                 {photo.id}
               </Link>
             ))

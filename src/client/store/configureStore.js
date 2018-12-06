@@ -2,9 +2,10 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import io from 'socket.io-client';
 import createSocketIoMiddleware from 'redux-socket.io';
 import { rootReducer } from '../reducers/index';
+import { port } from '../../../config/config';
 
 // eslint-disable-next-line no-restricted-globals
-const socket = io(`http://${location.host}`);
+const socket = io(`http://${location.hostname}:${port}`);
 const socketIoMiddleware = createSocketIoMiddleware(socket, 'server/');
 
 export default function configureStore() {
