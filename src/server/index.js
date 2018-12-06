@@ -13,7 +13,7 @@ const can = new Emitter();
 
 
 // HTTP
-const port = config.port || 8080;
+const port = config.port || 3000;
 const app = express();
 const server = http.createServer(app);
 
