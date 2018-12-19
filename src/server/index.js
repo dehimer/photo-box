@@ -91,13 +91,13 @@ can.on('photo:update', async (photo) => {
   can.emit('photos:sync');
 });
 
-can.on('photos:sync', (socket) => {
+can.on('photos:sync', (socket = io) => {
   db.photos.find({}).sort({ date: -1 }).limit(config.imagesPerPage).exec((err, photos) => {
-    socket.emit('photos', { type: 'config', data: photos });
+    socket.emit('action', { type: 'photos', data: photos });
   });
 });
 
-can.on('config:sync', (socket) => {
+can.on('config:sync', (socket = io) => {
   socket.emit('action', { type: 'config', data: config });
 });
 
