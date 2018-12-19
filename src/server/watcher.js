@@ -19,7 +19,7 @@ const processPhoto = (params, cb) => {
 
   const date = new Date();
 
-  const photoLabel = source.label + ((source.lastNum % imagesPerPage) + 1);
+  const photoLabel = source.label + ((sourcesLastNumByLabel[source.label] % imagesPerPage) + 1);
   const photoDate = `${date.getFullYear()}-${(date.getMonth() + 1)}-${date.getDate()}-${date.getHours()}-${date.getMinutes()}`;
   const shortName = `${photoDate}-${photoLabel}`;
   const photoName = `${imagesDirPath}/standart/${shortName}.jpg`;

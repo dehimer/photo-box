@@ -10,11 +10,10 @@ const Gallery = ({ config, photos }) => (
     {
       config.sources && config.sources.map(({ label }) => (
         <div key={label} className="panel">
-          { label }
           {
             photos.map(photo => (
               <Link key={photo.id} to={`/view/${photo.id}`}>
-                <img src={`images/${photo.thumb}`}/>
+                <img alt={photo.name} src={`images/${photo.thumb}`} />
                 {photo.id}
               </Link>
             ))
