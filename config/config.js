@@ -5,6 +5,7 @@ const config = {
     {
       watchpath: '../../Pictures/zd1',
       label: 'A',
+      frame: 'config/frame4.png',
       special: false,
       crop: {
         x: 1963,
