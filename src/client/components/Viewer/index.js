@@ -1,17 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
-const Viewer = ({ photo }) => (
+const Viewer = ({ match }) => (
   <div>
     {
-      photo.id
+      match.params.id
     }
+    <Link to="/">返回</Link>
   </div>
 );
 
 Viewer.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
-  photo: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
 };
 
 export default Viewer;

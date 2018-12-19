@@ -11,6 +11,8 @@ const watcher = require('./watcher');
 
 const can = new Emitter();
 
+console.log('__dirname');
+console.log(__dirname);
 const imagesDirPath = path.join(__dirname, '..', '..', 'images');
 
 
@@ -20,7 +22,7 @@ const app = express();
 const server = http.createServer(app);
 
 app.use(express.static('dist'));
-app.use(express.static(imagesDirPath));
+app.use('/images', express.static(imagesDirPath));
 
 
 server.listen(port, () => {
