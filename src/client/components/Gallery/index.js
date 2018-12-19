@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
+import './index.css';
 
 const Gallery = ({ config, photos }) => (
-  <div>
+  <div className="gallery">
     {
       config.sources && config.sources.map(({ label }) => (
         <div key={label} className="panel">
