@@ -12,9 +12,9 @@ const Gallery = ({ config, photos }) => (
         <div key={label} className="panel">
           {
             photos.map(photo => (
-              <Link key={photo.id} to={`/view/${photo.id}`}>
+              <Link key={photo.id} className="photo" to={`/view/${photo.id}`}>
+                <div className="label">{photo.id}</div>
                 <img alt={photo.name} src={`images/${photo.thumb}`} />
-                {photo.id}
               </Link>
             ))
           }
