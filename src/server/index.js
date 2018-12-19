@@ -11,6 +11,8 @@ const watcher = require('./watcher');
 
 const can = new Emitter();
 
+const imagesDirPath = path.join(__dirname, '..', '..', 'images');
+
 
 // HTTP
 const port = config.port || 3000;
@@ -18,7 +20,7 @@ const app = express();
 const server = http.createServer(app);
 
 app.use(express.static('dist'));
-app.use(express.static(path.join(__dirname, 'images')));
+app.use(express.static(imagesDirPath));
 
 
 server.listen(port, () => {
@@ -31,6 +33,7 @@ const io = socketIO();
 io.attach(server);
 
 io.on('connection', (socket) => {
+  console.log('connection');
   can.emit('config:sync', socket);
   can.emit('photos:sync', socket);
 });
@@ -54,17 +57,19 @@ db.photos.find({}).exec((err, photos) => {
 
 can.on('photo:new', (data) => {
   // Пишем в базу
-  db.photo.insert(data, (err) => {
+  db.photos.insert(data, (err) => {
     if (!err) can.emit('photos:sync');
   });
 });
 
 can.on('photo:send', (photoData) => {
+  console.log('photo:send');
   const photo = { ...photoData };
+  console.log(photo);
 
   console.log('syncPhoto');
   const formData = {
-    myFile: fs.createReadStream(`${__dirname}/images/${photo.src}`)
+    myFile: fs.createReadStream(`${imagesDirPath}/${photo.src}`)
   };
 
   photo.uploadedUrl = `${config.photoHostUrl}/${photo.name}`;
@@ -92,14 +97,16 @@ can.on('photo:update', async (photo) => {
 });
 
 can.on('photos:sync', (socket = io) => {
+  console.log('photos:sync');
   db.photos.find({}).sort({ date: -1 }).limit(config.imagesPerPage).exec((err, photos) => {
     socket.emit('action', { type: 'photos', data: photos });
   });
 });
 
 can.on('config:sync', (socket = io) => {
+  console.log('config:sync');
   socket.emit('action', { type: 'config', data: config });
 });
 
 
-watcher(config, db.photos, can);
+watcher({ ...config, imagesDirPath }, db.photos, can);

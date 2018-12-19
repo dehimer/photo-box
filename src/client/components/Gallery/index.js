@@ -14,6 +14,7 @@ const Gallery = ({ config, photos }) => (
           {
             photos.map(photo => (
               <Link key={photo.id} to={`/view/${photo.id}`}>
+                <img src={`images/${photo.thumb}`}/>
                 {photo.id}
               </Link>
             ))

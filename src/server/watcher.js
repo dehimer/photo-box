@@ -13,7 +13,8 @@ const processPhoto = (params, cb) => {
     useSecondCrop,
     thumbnail,
     imagesPerPage,
-    can
+    can,
+    imagesDirPath
   } = params;
 
   const date = new Date();
@@ -21,8 +22,8 @@ const processPhoto = (params, cb) => {
   const photoLabel = source.label + ((source.lastNum % imagesPerPage) + 1);
   const photoDate = `${date.getFullYear()}-${(date.getMonth() + 1)}-${date.getDate()}-${date.getHours()}-${date.getMinutes()}`;
   const shortName = `${photoDate}-${photoLabel}`;
-  const photoName = `${__dirname}/images/standart/${shortName}.jpg`;
-  const thumbName = `${__dirname}/images/thumbnail/${shortName}.jpg`;
+  const photoName = `${imagesDirPath}/standart/${shortName}.jpg`;
+  const thumbName = `${imagesDirPath}/thumbnail/${shortName}.jpg`;
 
   const image = gm(file);
 
@@ -52,14 +53,12 @@ const processPhoto = (params, cb) => {
     console.log(`Frame applyed to ' + ${photoName}`);
 
     // Создаем превью
-
     gm(photoName)
       .resize(thumbnail.width, thumbnail.height, '!')
       .quality(100)
       .write(thumbName, () => {
         console.log(`Миниатюра ${thumbName} создана`);
-
-        can.emit('photo:new', {
+        const photo = {
           name: shortName,
           label: source.label,
           path: file,
@@ -68,9 +67,11 @@ const processPhoto = (params, cb) => {
           display: true,
           date,
           id: photoLabel
-        });
+        };
 
-        if (cb) cb();
+        can.emit('photo:new', photo);
+
+        if (cb) cb(photo);
       });
   });
 };
@@ -129,7 +130,8 @@ module.exports = (config, photos, can) => {
           source,
           thumbnail,
           imagesPerPage,
-          can
+          can,
+          imagesDirPath: config.imagesDirPath
         };
 
         if (source.special) {
@@ -138,21 +140,25 @@ module.exports = (config, photos, can) => {
             ...defaultOptions,
             useSecondCrop: true,
           }, (procesedPhoto) => {
+            console.log('procesedPhoto1');
+            console.log(procesedPhoto);
             if (config.deleteAfterImport) {
               fs.unlink(file, () => {
                 console.log(`Source file ${file} is deleted`);
               });
             }
-            can('photo:send', procesedPhoto);
+            can.emit('photo:send', procesedPhoto);
           });
         } else {
           processPhoto(defaultOptions, (procesedPhoto) => {
+            console.log('procesedPhoto2');
+            console.log(procesedPhoto);
             if (config.deleteAfterImport) {
               fs.unlink(file, () => {
                 console.log(`Source file ${file} is deleted`);
               });
             }
-            can('photo:send', procesedPhoto);
+            can.emit('photo:send', procesedPhoto);
           });
         }
       }, 3000);
