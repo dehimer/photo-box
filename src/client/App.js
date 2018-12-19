@@ -7,7 +7,7 @@ export default () => (
   <div>
     <Switch>
       <Route exact path="/" component={Gallery} />
-      <Route exact path="/view" component={Viewer} />
+      <Route exact path="/view/:id" component={Viewer} />
     </Switch>
   </div>
 );
