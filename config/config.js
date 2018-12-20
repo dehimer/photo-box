@@ -31,11 +31,11 @@ const config = {
   useWatchFile: false,
 
   imagesPerPage: 200,
-  viewerCloseAfter: 35,
+  viewerCloseAfter: 10,
 
   photoHostUrl: 'http://zzhkg.silkroadcg.top',
 
-  uploadUrl: 'http://zzhkg.silkroadcg.top/uploader.php'
+  uploadUrl: 'http://zzhkg.silkroadcg.top/uploader.php',
 };
 
 if (typeof module !== 'undefined' && module.exports) {

@@ -40,6 +40,8 @@
     user-select: none;
     font-size: 150px;
     color: #ccc;
+    background: none;
+    border: none;
 }
 
 .viewer .photos-block .switcher.disabled {
