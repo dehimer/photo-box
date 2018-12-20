@@ -24,7 +24,7 @@ const Viewer = ({ match, photos }) => {
       <div className="id">{photo.id}</div>
 
       <div className="photos-block">
-        <Link className="switcher prev" to={`/view/${prevPhoto.id}`}>
+        <Link className={`switcher prev ${(prevPhoto.id === photo.id) ? 'disabled' : ''}`} to={`/view/${prevPhoto.id}`}>
           <FontAwesomeIcon icon={faAngleLeft} />
         </Link>
 
@@ -32,7 +32,7 @@ const Viewer = ({ match, photos }) => {
           <img alt={photo.name} src={`/images/${photo.src}`} />
         </div>
 
-        <Link className="switcher next" to={`/view/${nextPhoto.id}`}>
+        <Link className={`switcher next ${(nextPhoto.id === photo.id) ? 'disabled' : ''}`} to={`/view/${nextPhoto.id}`}>
           <FontAwesomeIcon icon={faAngleRight} />
         </Link>
       </div>

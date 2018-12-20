@@ -42,6 +42,12 @@
     color: #ccc;
 }
 
+.viewer .photos-block .switcher.disabled {
+    opacity: 0.5;
+    user-select: none;
+    pointer-events: none;
+}
+
 .viewer .photos-block .photo {
     width: 70vw;
     height: 500px;
