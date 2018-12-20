@@ -10,10 +10,14 @@ import './index.css';
 const Viewer = ({ match, photos }) => {
   const photoId = match.params.id;
   const photo = photos.find(ph => ph.id === photoId);
+
+  if (!photo) return null;
+
   const idx = photos.map(ph => ph.id).indexOf(photo.id);
 
   const prevPhoto = photos[idx - 1] ? photos[idx - 1] : photo;
   const nextPhoto = photos[idx + 1] ? photos[idx + 1] : photo;
+
 
   return (
     <div className="viewer">

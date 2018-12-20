@@ -19,10 +19,17 @@ const port = config.port || 3000;
 const app = express();
 const server = http.createServer(app);
 
-
 app.use(express.static('dist'));
 app.use('/images', express.static(imagesDirPath));
 app.use('/public', express.static(path.join(__dirname, '..', '..', 'public')));
+
+/*app.get('/!*', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', '..', 'public', 'index.html'), (err) => {
+    if (err) {
+      res.status(500).send(err);
+    }
+  });
+});*/
 
 
 server.listen(port, () => {
