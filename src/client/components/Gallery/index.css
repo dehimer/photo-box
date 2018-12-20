@@ -2,16 +2,18 @@
     display: flex;
     width: 100vw;
     height: 100vh;
+    overflow: hidden;
 }
 
-.panel {
+.gallery .panel {
     flex: 1;
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
+    overflow-y: auto;
 }
 
-.photo {
+.gallery .photo {
     display: flex;
     flex: 0 0 33.33%;
     height: 400px;
@@ -19,17 +21,17 @@
 }
 
 
-.photo img {
+.gallery .photo img {
     flex: 1;
     object-fit: cover;
 }
 
-.photo:hover {
+.gallery .photo:hover {
     opacity: 0.8;
     cursor: pointer;
 }
 
-.label {
+.gallery .label {
     position: absolute;
     top: 10px;
     left: 10px;
@@ -39,7 +41,7 @@
     line-height: 140%;
 }
 
-.footer {
+.gallery .footer {
     position: fixed;
     bottom: 0;
     left: 0;
