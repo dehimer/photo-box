@@ -1,12 +1,23 @@
 import React, { Fragment, Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import './index.css';
 
+import Photo from '../Photo';
+
 class Gallery extends Component {
+  constructor(props) {
+    super(props);
+    this.fromPhotoRef = React.createRef();
+  }
+
   componentDidMount() {
+    console.log('fromPhotoRef');
+    console.log(this.fromPhotoRef.current);
+    if (this.fromPhoto && this.fromPhoto.current) {
+      this.fromPhoto.current.scrollIntoView();
+    }
   }
 
   render() {
@@ -17,7 +28,7 @@ class Gallery extends Component {
     console.log(fromPhotoId);
 
     // const fromPhoto = photos.find(photo => photo.id === fromPhotoId);
-    const scrollToRef = React.createRef();
+    // const scrollToRef = React.createRef();
 
     return (
       <Fragment>
@@ -26,12 +37,7 @@ class Gallery extends Component {
             config.sources && config.sources.map(({ label }) => (
               <div key={label} className="panel">
                 {
-                  photos.map(photo => (
-                    <Link key={photo.id} className="photo" to={`/view/${photo.id}`}>
-                      <div className="label">{photo.id}</div>
-                      <img alt={photo.name} src={`/images/${photo.thumb}`} />
-                    </Link>
-                  ))
+                  photos.map(photo => <Photo key={photo.id} photo={photo} inFocus={photo.id === fromPhotoId} />)
                 }
               </div>
             ))
