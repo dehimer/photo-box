@@ -20,8 +20,8 @@ class Photo extends React.Component {
     const { inFocus } = this.props;
 
     if (inFocus) {
-      console.log(this.ref);
-      this.ref.current.scrollIntoView();
+      const { top, height } = this.ref.current.getBoundingClientRect();
+      this.ref.current.parentElement.scrollTo(0, top - height / 2);
     }
   }
 
