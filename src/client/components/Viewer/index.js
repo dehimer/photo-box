@@ -4,7 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import connect from 'react-redux/es/connect/connect';
-import QRious from 'qrious';
+import { QRCode } from 'react-qr-svg';
 
 import './index.css';
 
@@ -52,6 +52,7 @@ class Viewer extends PureComponent {
 
     const photoId = match.params.id;
     const photo = photos.find(ph => ph.id === photoId);
+    console.log(photo);
 
     if (!photo) return null;
 
@@ -89,7 +90,13 @@ class Viewer extends PureComponent {
         <div className="qr-block">
           <div className="note">扫描二维码下载照片</div>
           <div className="qr">
-            <canvas />
+            <QRCode
+              bgColor="#FFFFFF"
+              fgColor="#000000"
+              level="Q"
+              style={{ width: 256 }}
+              value={photo.uploadedUrl}
+            />
           </div>
         </div>
 

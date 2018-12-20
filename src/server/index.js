@@ -23,14 +23,6 @@ app.use(express.static('dist'));
 app.use('/images', express.static(imagesDirPath));
 app.use('/public', express.static(path.join(__dirname, '..', '..', 'public')));
 
-/*app.get('/!*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', '..', 'public', 'index.html'), (err) => {
-    if (err) {
-      res.status(500).send(err);
-    }
-  });
-});*/
-
 
 server.listen(port, () => {
   console.log(`Server is ran on : http://localhost:${port}`);
@@ -72,11 +64,8 @@ can.on('photo:new', (data) => {
 });
 
 can.on('photo:send', (photoData) => {
-  console.log('photo:send');
   const photo = { ...photoData };
-  console.log(photo);
 
-  console.log('syncPhoto');
   const formData = {
     myFile: fs.createReadStream(`${imagesDirPath}/${photo.src}`)
   };
@@ -100,13 +89,12 @@ can.on('photo:send', (photoData) => {
 
 can.on('photo:update', async (photo) => {
   // eslint-disable-next-line no-underscore-dangle
-  await db.photos.update({ _id: photo._id }, photo);
+  await db.photos.update({ id: photo.id }, photo);
   // send to all clients
   can.emit('photos:sync');
 });
 
 can.on('photos:sync', (socket = io) => {
-  console.log('photos:sync');
   db.photos.find({}).sort({ date: -1 }).limit(config.imagesPerPage).exec((err, photos) => {
     socket.emit('action', { type: 'photos', data: photos });
   });
