@@ -36,6 +36,9 @@ const config = {
   photoHostUrl: 'http://zzhkg.silkroadcg.top',
 
   uploadUrl: 'http://zzhkg.silkroadcg.top/uploader.php',
+
+  printerName: 'DS-RX1 (копия 1)',
+  mode: 'print'
 };
 
 if (typeof module !== 'undefined' && module.exports) {
