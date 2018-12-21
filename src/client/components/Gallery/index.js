@@ -4,10 +4,12 @@ import PropTypes from 'prop-types';
 
 import './index.css';
 
-import Photo from '../Photo';
+import Photo from './components/Photo';
+import Footer from './components/Footer';
 
-const Gallery = ({ config: { sources, mode }, photos, match }) => {
+const Gallery = ({ config, photos, match }) => {
   const fromPhotoId = match.params.from;
+  const { sources, mode } = config;
 
   return (
     <Fragment>
@@ -24,13 +26,7 @@ const Gallery = ({ config: { sources, mode }, photos, match }) => {
           ))
         }
       </div>
-      <div className="footer">
-        {
-          mode === 'print'
-            ? (<div className="print" />)
-            : (<div className="intro">请选择下载的照片</div>)
-        }
-      </div>
+      <Footer mode={mode} />
     </Fragment>
   );
 };
