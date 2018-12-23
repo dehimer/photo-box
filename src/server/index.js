@@ -116,10 +116,14 @@ can.on('photo:print', (photo) => {
   const photoPath = path.join(imagesDirPath, photo.src);
   console.log('photoPath:');
   console.log(photoPath);
+  const printDir = path.join(imagesDirPath, 'print');
+  if (!fs.existsSync(printDir)) {
+    fs.mkdirSync(printDir);
+  }
   const printName = path.join(imagesDirPath, 'print', `${(new Date()).getTime()}${fullname}`);
   console.log('printName:');
   console.log(printName);
-  gm(photoPath).append(photoPath).append(photoPath).write(printName, (err) => {
+  gm(photoPath).write(printName, (err) => {
     if (err) {
       console.log(err);
       return;
