@@ -15,8 +15,12 @@ class Gallery extends Component {
 
   onPrintSelected = () => {
     console.log('onPrintSelected');
+    const { print } = this.props;
     const { selected } = this.state;
-    console.log(selected.id);
+    print(selected);
+    this.setState({
+      selected: null
+    });
   };
 
   onSelect = (photo) => {
@@ -96,6 +100,7 @@ Gallery.propTypes = {
   config: PropTypes.object.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   photos: PropTypes.array.isRequired,
+  print: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -107,11 +112,14 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (/* dispatch */) => (
+const mapDispatchToProps = dispatch => (
   {
-    // addScores: (player) => {
-    //   dispatch({ type: 'server/add_scores', data: player });
-    // },
+    print: (photo) => {
+      dispatch({
+        type: 'server/print',
+        data: photo
+      });
+    },
   }
 );
 

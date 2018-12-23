@@ -6,6 +6,8 @@ const NeDB = require('nedb');
 const socketIO = require('socket.io');
 const http = require('http');
 const path = require('path');
+const gm = require('gm');
+const exec = require('child_process').exec;
 const config = require('../../config/config');
 const watcher = require('./watcher');
 
@@ -34,9 +36,18 @@ const io = socketIO();
 io.attach(server);
 
 io.on('connection', (socket) => {
-  console.log('connection');
   can.emit('config:sync', socket);
   can.emit('photos:sync', socket);
+
+  socket.on('action', (action) => {
+    const { type, data } = action;
+    switch (type) {
+      case 'server/print':
+        can.emit('photo:print', data);
+        break;
+      default: console.log(`Unknown action ${type}`);
+    }
+  });
 });
 
 // DB
@@ -74,7 +85,10 @@ can.on('photo:send', (photoData) => {
 
   can.emit('photo:update', photo);
 
-  request.post({ url: `${config.photoHostUrl}/uploader.php`, formData }, (err, httpResponse, body) => {
+  request.post({
+    url: `${config.photoHostUrl}/uploader.php`,
+    formData
+  }, (err, httpResponse, body) => {
     if (err || body !== 'success') {
       photo.synced = false;
       console.error('Photos: Upload failed:', err, body);
@@ -92,6 +106,39 @@ can.on('photo:update', async (photo) => {
   await db.photos.update({ id: photo.id }, photo);
   // send to all clients
   can.emit('photos:sync');
+});
+
+can.on('photo:print', (photo) => {
+  console.log('photo:print');
+  console.log(photo);
+  const fullname = path.basename(photo.src);
+  console.log(fullname);
+  const photoPath = path.join(imagesDirPath, photo.src);
+  console.log('photoPath:');
+  console.log(photoPath);
+  const printName = path.join(imagesDirPath, 'print', `${(new Date()).getTime()}${fullname}`);
+  console.log('printName:');
+  console.log(printName);
+  gm(photoPath).append(photoPath).append(photoPath).write(printName, (err) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    const cmd = `rundll32 shimgvw.dll,ImageView_PrintTo "${printName}" "${config.printerName}"`;
+    console.log('cmd:');
+    console.log(cmd);
+
+    exec(cmd, (error, stdout, stderr) => {
+      if (error || stderr) {
+        console.log(error, stderr);
+      } else {
+        console.log('Printing');
+        setTimeout(() => {
+          fs.unlink(printName);
+        }, 15000);
+      }
+    });
+  });
 });
 
 can.on('photos:sync', (socket = io) => {
