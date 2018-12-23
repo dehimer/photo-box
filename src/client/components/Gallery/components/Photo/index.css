@@ -1,0 +1,32 @@
+.photo {
+    border: none;
+    outline: none;
+    margin: 0;
+    padding: 0;
+    background: none;
+
+    display: flex;
+    flex: 0 0 33.33%;
+    height: 400px;
+    position: relative;
+}
+
+.photo img {
+    flex: 1;
+    object-fit: cover;
+}
+
+.photo:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.photo .label {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: yellow;
+    padding: 0 5px;
+    border-radius: 4px;
+    line-height: 140%;
+}

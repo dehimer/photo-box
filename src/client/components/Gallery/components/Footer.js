@@ -41,7 +41,7 @@ Footer.defaultProps = {
 };
 
 Footer.propTypes = {
-  active: PropTypes.bool.isRequried,
+  active: PropTypes.bool.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   mode: PropTypes.string
 };

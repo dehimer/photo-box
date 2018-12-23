@@ -13,34 +13,6 @@
     overflow-y: auto;
 }
 
-.gallery .photo {
-    display: flex;
-    flex: 0 0 33.33%;
-    height: 400px;
-    position: relative;
-}
-
-
-.gallery .photo img {
-    flex: 1;
-    object-fit: cover;
-}
-
-.gallery .photo:hover {
-    opacity: 0.8;
-    cursor: pointer;
-}
-
-.gallery .label {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: yellow;
-    padding: 0 5px;
-    border-radius: 4px;
-    line-height: 140%;
-}
-
 .footer {
     position: fixed;
     bottom: 0;

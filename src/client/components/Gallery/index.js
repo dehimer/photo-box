@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -7,9 +8,17 @@ import './index.css';
 import Photo from './components/Photo';
 import Footer from './components/Footer';
 
-const Gallery = ({ config, photos, match }) => {
+const Gallery = ({ config, photos, match, history }) => {
   const fromPhotoId = match.params.from;
   const { sources, mode } = config;
+
+  const onSelect = (photo) => {
+    if (mode === 'print') {
+      // run print code
+    } else {
+      history.push(`/view/${photo.id}`);
+    }
+  };
 
   return (
     <Fragment>
@@ -19,23 +28,34 @@ const Gallery = ({ config, photos, match }) => {
             <div key={label} className="panel">
               {
                 photos.map(photo => (
-                  <Photo key={photo.id} photo={photo} inFocus={photo.id === fromPhotoId} />
+                  <Photo
+                    key={photo.id}
+                    photo={photo}
+                    inFocus={photo.id === fromPhotoId}
+                    selected={onSelect}
+                  />
                 ))
               }
             </div>
           ))
         }
       </div>
-      <Footer mode={mode} />
+      <Footer mode={mode} active={false} />
     </Fragment>
   );
 };
 
 Gallery.defaultProps = {
-  match: { params: { from: null } }
+  match: {
+    params: {
+      from: null
+    }
+  }
 };
 
 Gallery.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  history: PropTypes.object.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   match: PropTypes.object,
   // eslint-disable-next-line react/forbid-prop-types
@@ -64,4 +84,4 @@ const mapDispatchToProps = (/* dispatch */) => (
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Gallery);
+)(withRouter(Gallery));

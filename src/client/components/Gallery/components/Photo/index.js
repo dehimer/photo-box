@@ -1,8 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-class Photo extends React.Component {
+import './index.css';
+
+class Index extends React.Component {
   constructor(props) {
     super(props);
     this.ref = React.createRef();
@@ -26,21 +27,22 @@ class Photo extends React.Component {
   }
 
   render() {
-    const { photo } = this.props;
+    const { photo, selected } = this.props;
 
     return (
-      <Link innerRef={this.ref} className="photo" to={`/view/${photo.id}`}>
+      <div className="photo" ref={this.ref} onClick={() => selected(photo)}>
         <div className="label">{photo.id}</div>
         <img alt={photo.name} src={`/images/${photo.thumb}`} />
-      </Link>
+      </div>
     );
   }
 }
 
-Photo.propTypes = {
+Index.propTypes = {
+  selected: PropTypes.func.isRequired,
   inFocus: PropTypes.bool.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   photo: PropTypes.object.isRequired,
 };
 
-export default Photo;
+export default Index;
