@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -8,42 +8,70 @@ import './index.css';
 import Photo from './components/Photo';
 import Footer from './components/Footer';
 
-const Gallery = ({ config, photos, match, history }) => {
-  const fromPhotoId = match.params.from;
-  const { sources, mode } = config;
+class Gallery extends Component {
+  state = {
+    selected: null
+  };
 
-  const onSelect = (photo) => {
+  onSelect = (photo) => {
+    const { selected } = this.state;
+    const { config, history } = this.props;
+    const { mode } = config;
+
     if (mode === 'print') {
-      // run print code
+      this.setState({
+        selected: selected ? null : photo.id
+      });
     } else {
       history.push(`/view/${photo.id}`);
     }
   };
 
-  return (
-    <Fragment>
-      <div className="gallery">
-        {
-          sources && sources.map(({ label }) => (
-            <div key={label} className="panel">
-              {
-                photos.map(photo => (
-                  <Photo
-                    key={photo.id}
-                    photo={photo}
-                    inFocus={photo.id === fromPhotoId}
-                    selected={onSelect}
-                  />
-                ))
-              }
-            </div>
-          ))
-        }
-      </div>
-      <Footer mode={mode} active={false} />
-    </Fragment>
-  );
-};
+  render() {
+    const { selected } = this.state;
+    const { config, photos, match } = this.props;
+    const fromPhotoId = match.params.from;
+    const { sources, mode } = config;
+
+    return (
+      <Fragment>
+        <div className="gallery">
+          {
+            sources && sources.map(({ label }) => (
+              <div key={label} className="panel">
+                {
+                  photos.map((photo) => {
+                    let inFocus;
+                    let shadowed;
+
+                    if (mode === 'print') {
+                      inFocus = false;
+                      shadowed = selected ? selected !== photo.id : false;
+                    } else {
+                      inFocus = (photo.id === fromPhotoId);
+                      shadowed = false;
+                    }
+
+                    return (
+                      <Photo
+                        key={photo.id}
+                        photo={photo}
+                        inFocus={inFocus}
+                        onSelect={this.onSelect}
+                        shadowed={shadowed}
+                      />
+                    );
+                  })
+                }
+              </div>
+            ))
+          }
+        </div>
+        <Footer mode={mode} active={false} />
+      </Fragment>
+    );
+  }
+}
 
 Gallery.defaultProps = {
   match: {

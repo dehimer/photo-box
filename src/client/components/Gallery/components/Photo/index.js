@@ -27,10 +27,14 @@ class Index extends React.Component {
   }
 
   render() {
-    const { photo, selected } = this.props;
+    const { photo, onSelect, shadowed } = this.props;
 
     return (
-      <div className="photo" ref={this.ref} onClick={() => selected(photo)}>
+      <div
+        className={`photo ${shadowed ? 'shadowed' : ''}`}
+        ref={this.ref}
+        onClick={() => onSelect(photo)}
+      >
         <div className="label">{photo.id}</div>
         <img alt={photo.name} src={`/images/${photo.thumb}`} />
       </div>
@@ -39,7 +43,8 @@ class Index extends React.Component {
 }
 
 Index.propTypes = {
-  selected: PropTypes.func.isRequired,
+  shadowed: PropTypes.bool.isRequired,
+  onSelect: PropTypes.func.isRequired,
   inFocus: PropTypes.bool.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   photo: PropTypes.object.isRequired,
