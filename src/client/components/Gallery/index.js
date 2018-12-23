@@ -13,6 +13,12 @@ class Gallery extends Component {
     selected: null
   };
 
+  onPrintSelected = () => {
+    console.log('onPrintSelected');
+    const { selected } = this.state;
+    console.log(selected.id);
+  };
+
   onSelect = (photo) => {
     const { selected } = this.state;
     const { config, history } = this.props;
@@ -20,7 +26,7 @@ class Gallery extends Component {
 
     if (mode === 'print') {
       this.setState({
-        selected: selected ? null : photo.id
+        selected: selected ? null : photo
       });
     } else {
       history.push(`/view/${photo.id}`);
@@ -46,7 +52,7 @@ class Gallery extends Component {
 
                     if (mode === 'print') {
                       inFocus = false;
-                      shadowed = selected ? selected !== photo.id : false;
+                      shadowed = selected ? selected.id !== photo.id : false;
                     } else {
                       inFocus = (photo.id === fromPhotoId);
                       shadowed = false;
@@ -67,7 +73,7 @@ class Gallery extends Component {
             ))
           }
         </div>
-        <Footer mode={mode} active={false} />
+        <Footer mode={mode} active={!!selected} onPrint={this.onPrintSelected} />
       </Fragment>
     );
   }

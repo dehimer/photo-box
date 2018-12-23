@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@material-ui/styles';
 import Button from '@material-ui/core/Button';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPrint, faEnvelopeSquare } from '@fortawesome/free-solid-svg-icons';
 
 const PrintButton = styled(Button)({
   background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -15,15 +17,30 @@ const PrintButton = styled(Button)({
   margin: '0 20px'
 });
 
-const Footer = ({ mode, active }) => {
+const Footer = ({ mode, active, onPrint }) => {
   let content = null;
 
   if (mode !== '') {
     content = (mode === 'print')
       ? (
         <div>
-          <PrintButton variant="contained" color="primary" disabled={!active}>Print</PrintButton>
-          <PrintButton variant="contained" color="primary" disabled={!active}>Mail</PrintButton>
+          <PrintButton
+            variant="contained"
+            color="primary"
+            disabled={!active}
+            onClick={onPrint}
+          >
+            <FontAwesomeIcon icon={faPrint} />
+            Print
+          </PrintButton>
+          <PrintButton
+            variant="contained"
+            color="primary"
+            disabled={!active}
+          >
+            <FontAwesomeIcon icon={faEnvelopeSquare} />
+            Mail
+          </PrintButton>
         </div>
       )
       : (<div className="intro">请选择下载的照片</div>);
@@ -43,7 +60,9 @@ Footer.defaultProps = {
 Footer.propTypes = {
   active: PropTypes.bool.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
-  mode: PropTypes.string
+  mode: PropTypes.string,
+  // eslint-disable-next-line react/forbid-prop-types
+  onPrint: PropTypes.func.isRequired
 };
 
 export default Footer;
