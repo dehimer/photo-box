@@ -82,6 +82,10 @@
     height: 250px;
     margin-top: 25px;
 }
+.viewer .qr-block .qr svg {
+    border: 10px solid white;
+    border-radius: 5px;
+}
 
 .viewer .qr-block .qr canvas {
     height: 250px;
