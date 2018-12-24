@@ -1,0 +1,18 @@
+.email-dialog {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+
+    font-size: 40px;
+}
+
+.email-dialog input {
+    font-size: 40px;
+    border-radius: 5px;
+    padding-left: 20px;
+    width: 700px;
+}

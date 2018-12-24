@@ -45,28 +45,31 @@ class Footer extends Component {
     if (mode !== '') {
       content = (mode === 'print')
         ? (
-          <div>
-            <PrintButton
-              variant="contained"
-              color="primary"
-              disabled={!active}
-              onClick={onPrint}
-            >
-              <FontAwesomeIcon icon={faPrint} />
-              Print
-            </PrintButton>
-            <PrintButton
-              variant="contained"
-              color="primary"
-              disabled={!active}
-              onClick={this.openEmailDialog}
-            >
-              <FontAwesomeIcon icon={faEnvelopeSquare} />
-              Mail
-            </PrintButton>
+          emailDialogOpen
+            ? (<EmailDialog handleClose={this.closeEmailDialog} />)
+            : (
+              <div>
+                <PrintButton
+                  variant="contained"
+                  color="primary"
+                  disabled={!active}
+                  onClick={onPrint}
+                >
+                  <FontAwesomeIcon icon={faPrint} />
+                  Print
+                </PrintButton>
 
-            <EmailDialog open={emailDialogOpen} handleClose={this.closeEmailDialog} />
-          </div>
+                <PrintButton
+                  variant="contained"
+                  color="primary"
+                  disabled={!active}
+                  onClick={this.openEmailDialog}
+                >
+                  <FontAwesomeIcon icon={faEnvelopeSquare} />
+                  Mail
+                </PrintButton>
+              </div>
+            )
         )
         : (<div className="intro">请选择下载的照片</div>);
     }
