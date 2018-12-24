@@ -55,6 +55,8 @@ const config = {
       }
     }
   },
+
+  mode: 'print'
 };
 
 if (typeof module !== 'undefined' && module.exports) {
