@@ -1,4 +1,4 @@
-.photo {
+.gallery-photo {
     border: none;
     outline: none;
     margin: 0;
@@ -11,17 +11,17 @@
     position: relative;
 }
 
-.photo img {
+.gallery-photo img {
     flex: 1;
     object-fit: fill;
 }
 
-.photo:hover {
+.gallery-photo:hover {
     opacity: 0.8;
     cursor: pointer;
 }
 
-.photo .label {
+.gallery-photo .label {
     position: absolute;
     top: 10px;
     left: 10px;
@@ -31,6 +31,6 @@
     line-height: 140%;
 }
 
-.photo.shadowed {
+.gallery-photo.shadowed {
     opacity: 0.1;
 }

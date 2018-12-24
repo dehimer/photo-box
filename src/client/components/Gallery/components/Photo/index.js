@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import './index.css';
 
-class Index extends React.Component {
+class Photo extends React.Component {
   constructor(props) {
     super(props);
     this.ref = React.createRef();
@@ -31,7 +31,7 @@ class Index extends React.Component {
 
     return (
       <div
-        className={`photo ${shadowed ? 'shadowed' : ''}`}
+        className={`gallery-photo ${shadowed ? 'shadowed' : ''}`}
         ref={this.ref}
         onClick={() => onSelect(photo)}
       >
@@ -42,7 +42,7 @@ class Index extends React.Component {
   }
 }
 
-Index.propTypes = {
+Photo.propTypes = {
   shadowed: PropTypes.bool.isRequired,
   onSelect: PropTypes.func.isRequired,
   inFocus: PropTypes.bool.isRequired,
@@ -50,4 +50,4 @@ Index.propTypes = {
   photo: PropTypes.object.isRequired,
 };
 
-export default Index;
+export default Photo;
