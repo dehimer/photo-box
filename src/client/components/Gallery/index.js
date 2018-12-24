@@ -23,6 +23,19 @@ class Gallery extends Component {
     });
   };
 
+  onSendSelected = (email) => {
+    console.log('onSendSelected');
+    const { send } = this.props;
+    const { selected } = this.state;
+    send({
+      email,
+      photo: selected
+    });
+    this.setState({
+      selected: null
+    });
+  };
+
   onSelect = (photo) => {
     const { selected } = this.state;
     const { config, history } = this.props;
@@ -77,7 +90,12 @@ class Gallery extends Component {
             ))
           }
         </div>
-        <Footer mode={mode} active={!!selected} onPrint={this.onPrintSelected} />
+        <Footer
+          mode={mode}
+          active={!!selected}
+          onPrint={this.onPrintSelected}
+          onSend={this.onSendSelected}
+        />
       </Fragment>
     );
   }
@@ -101,6 +119,7 @@ Gallery.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   photos: PropTypes.array.isRequired,
   print: PropTypes.func.isRequired,
+  send: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -118,6 +137,12 @@ const mapDispatchToProps = dispatch => (
       dispatch({
         type: 'server/print',
         data: photo
+      });
+    },
+    send: (data) => {
+      dispatch({
+        type: 'server/send',
+        data
       });
     },
   }

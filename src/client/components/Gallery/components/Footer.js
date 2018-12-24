@@ -29,7 +29,14 @@ class Footer extends Component {
     });
   };
 
-  closeEmailDialog = () => {
+  closeEmailDialog = (email) => {
+    console.log('closeEmailDialog');
+    console.log(email);
+    if (email) {
+      const { onSend } = this.props;
+      onSend(email);
+    }
+
     this.setState({
       emailDialogOpen: false,
     });
@@ -92,7 +99,9 @@ Footer.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   mode: PropTypes.string,
   // eslint-disable-next-line react/forbid-prop-types
-  onPrint: PropTypes.func.isRequired
+  onPrint: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  onSend: PropTypes.func.isRequired
 };
 
 export default Footer;

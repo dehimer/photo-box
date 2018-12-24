@@ -40,10 +40,14 @@ io.on('connection', (socket) => {
   can.emit('photos:sync', socket);
 
   socket.on('action', (action) => {
+    console.log(action);
     const { type, data } = action;
     switch (type) {
       case 'server/print':
         can.emit('photo:print', data);
+        break;
+      case 'server/send':
+        can.emit('photo:send', data);
         break;
       default: console.log(`Unknown action ${type}`);
     }
@@ -74,7 +78,7 @@ can.on('photo:new', (data) => {
   });
 });
 
-can.on('photo:send', (photoData) => {
+can.on('photo:print', (photoData) => {
   const photo = { ...photoData };
 
   const formData = {
@@ -106,6 +110,12 @@ can.on('photo:update', async (photo) => {
   await db.photos.update({ id: photo.id }, photo);
   // send to all clients
   can.emit('photos:sync');
+});
+
+can.on('photo:send', ({ email, photo }) => {
+  console.log('photo:print');
+  console.log(email);
+  console.log(photo);
 });
 
 can.on('photo:print', (photo) => {
