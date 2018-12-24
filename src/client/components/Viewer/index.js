@@ -43,7 +43,6 @@ class Viewer extends PureComponent {
 
   switchPhoto(photo) {
     const { history } = this.props;
-    // this.setCloseTimer();
     history.push(`/view/${photo.id}`);
   }
 
@@ -52,7 +51,6 @@ class Viewer extends PureComponent {
 
     const photoId = match.params.id;
     const photo = photos.find(ph => ph.id === photoId);
-    console.log(photo);
 
     if (!photo) return null;
 

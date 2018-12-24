@@ -47,39 +47,35 @@ class Footer extends Component {
     const { mode, active, onPrint } = this.props;
     const { emailDialogOpen } = this.state;
 
-    let content = null;
+    const content = (mode === 'print')
+      ? (
+        emailDialogOpen
+          ? (<EmailDialog handleClose={this.closeEmailDialog} />)
+          : (
+            <div>
+              <PrintButton
+                variant="contained"
+                color="primary"
+                disabled={!active}
+                onClick={onPrint}
+              >
+                <FontAwesomeIcon icon={faPrint} />
+                Print
+              </PrintButton>
 
-    if (mode !== '') {
-      content = (mode === 'print')
-        ? (
-          emailDialogOpen
-            ? (<EmailDialog handleClose={this.closeEmailDialog} />)
-            : (
-              <div>
-                <PrintButton
-                  variant="contained"
-                  color="primary"
-                  disabled={!active}
-                  onClick={onPrint}
-                >
-                  <FontAwesomeIcon icon={faPrint} />
-                  Print
-                </PrintButton>
-
-                <PrintButton
-                  variant="contained"
-                  color="primary"
-                  disabled={!active}
-                  onClick={this.openEmailDialog}
-                >
-                  <FontAwesomeIcon icon={faEnvelopeSquare} />
-                  Mail
-                </PrintButton>
-              </div>
-            )
-        )
-        : (<div className="intro">请选择下载的照片</div>);
-    }
+              <PrintButton
+                variant="contained"
+                color="primary"
+                disabled={!active}
+                onClick={this.openEmailDialog}
+              >
+                <FontAwesomeIcon icon={faEnvelopeSquare} />
+                Mail
+              </PrintButton>
+            </div>
+          )
+      )
+      : (<div className="intro">请选择下载的照片</div>);
 
     return (
       <div className="footer">
