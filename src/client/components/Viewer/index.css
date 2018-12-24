@@ -36,12 +36,10 @@
 }
 
 .viewer .photos-block .switcher {
-    cursor: pointer;
     user-select: none;
+    cursor: pointer;
     font-size: 150px;
     color: #ccc;
-    background: none;
-    border: none;
 }
 
 .viewer .photos-block .switcher.disabled {
@@ -60,6 +58,7 @@
     height: 100%;
     width: 100%;
     object-fit: contain;
+    user-select: none;
 }
 
 .viewer .qr-block {
@@ -73,6 +72,7 @@
     font-size: 20px;
     text-align: center;
     color: white;
+    user-select: none;
 }
 
 .viewer .qr-block .qr {

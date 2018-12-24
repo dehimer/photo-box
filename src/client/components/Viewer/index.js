@@ -64,25 +64,23 @@ class Viewer extends PureComponent {
         <div className="id">{photo.id}</div>
 
         <div className="photos-block">
-          <button
-            type="button"
+          <div
             className={`switcher prev ${(prevPhoto.id === photo.id) ? 'disabled' : ''}`}
             onClick={() => this.switchPhoto(prevPhoto)}
           >
             <FontAwesomeIcon icon={faAngleLeft} />
-          </button>
+          </div>
 
           <div className="photo">
             <img alt={photo.name} src={`/images/${photo.src}`} />
           </div>
 
-          <button
-            type="button"
+          <div
             className={`switcher next ${(nextPhoto.id === photo.id) ? 'disabled' : ''}`}
             onClick={() => this.switchPhoto(nextPhoto)}
           >
             <FontAwesomeIcon icon={faAngleRight} />
-          </button>
+          </div>
         </div>
 
         <div className="qr-block">

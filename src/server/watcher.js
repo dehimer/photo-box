@@ -48,7 +48,6 @@ const processPhoto = (params, cb) => {
   sourcesLastNumByLabel[source.label] += 1;
 
   // Создаем картинку
-
   image.quality(100).write(photoName, () => {
     console.log(`Frame applyed to ' + ${photoName}`);
 
