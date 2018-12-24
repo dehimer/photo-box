@@ -181,6 +181,33 @@ can.on('photo:print', (photo) => {
   });
 });
 
+can.on('photo:upload', (photoData) => {
+  const photo = { ...photoData };
+
+  const formData = {
+    myFile: fs.createReadStream(`${imagesDirPath}/${photo.src}`)
+  };
+
+  photo.uploadedUrl = `${config.photoHostUrl}/${photo.name}`;
+
+  can.emit('photo:update', photo);
+
+  request.post({
+    url: `${config.photoHostUrl}/uploader.php`,
+    formData
+  }, (err, httpResponse, body) => {
+    if (err || body !== 'success') {
+      photo.synced = false;
+      console.error('Photos: Upload failed:', err, body);
+    } else {
+      photo.synced = true;
+      console.log('Photos: Upload successful!  Server responded with:', body);
+    }
+
+    can.emit('photo:update', photo);
+  });
+});
+
 can.on('photos:sync', (socket = io) => {
   db.photos.find({}).sort({ date: -1 }).limit(config.imagesPerPage).exec((err, photos) => {
     socket.emit('action', { type: 'photos', data: photos });

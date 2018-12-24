@@ -31,7 +31,7 @@ const config = {
   useWatchFile: false,
 
   imagesPerPage: 200,
-  viewerCloseAfter: 10,
+  viewerCloseAfter: 35,
 
   photoHostUrl: 'http://zzhkg.silkroadcg.top',
 

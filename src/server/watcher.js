@@ -147,7 +147,7 @@ module.exports = (config, photos, can) => {
                 console.log(`Source file ${file} is deleted`);
               });
             }
-            can.emit('photo:send', procesedPhoto);
+            can.emit('photo:upload', procesedPhoto);
           });
         } else {
           processPhoto(defaultOptions, (procesedPhoto) => {
@@ -158,7 +158,7 @@ module.exports = (config, photos, can) => {
                 console.log(`Source file ${file} is deleted`);
               });
             }
-            can.emit('photo:send', procesedPhoto);
+            can.emit('photo:upload', procesedPhoto);
           });
         }
       }, 3000);

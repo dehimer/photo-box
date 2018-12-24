@@ -13,7 +13,7 @@
 
 .photo img {
     flex: 1;
-    object-fit: cover;
+    object-fit: fill;
 }
 
 .photo:hover {
