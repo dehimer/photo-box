@@ -38,7 +38,24 @@ const config = {
   uploadUrl: 'http://zzhkg.silkroadcg.top/uploader.php',
 
   printerName: 'DS-RX1 (копия 1)',
-  mode: 'print'
+  mode: 'print',
+
+  mail: {
+    from: 'Photobox <cat@hello-alice.ru>',
+    subject: 'Your photo',
+    attemptsLimit: 100,
+    smtp: {
+      host: 'p188309.mail.ihc.ru',
+      port: 25,
+      auth: {
+        user: 'io@hello.io',
+        pass: 'ioioio88'
+      },
+      tls: {
+        rejectUnauthorized: false
+      }
+    }
+  },
 };
 
 if (typeof module !== 'undefined' && module.exports) {

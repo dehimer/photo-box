@@ -1,3 +1,4 @@
+const nodemailer = require('nodemailer');
 const express = require('express');
 const Emitter = require('events');
 const request = require('request');
@@ -12,6 +13,9 @@ const config = require('../../config/config');
 const watcher = require('./watcher');
 
 const can = new Emitter();
+
+// create reusable transporter object using the default SMTP transport
+const mailtransporter = nodemailer.createTransport(config.mail.smtp);
 
 const imagesDirPath = path.join(__dirname, '..', '..', 'images');
 
@@ -116,6 +120,28 @@ can.on('photo:send', ({ email, photo }) => {
   console.log('photo:print');
   console.log(email);
   console.log(photo);
+  const { mail: { from, subject } } = config;
+
+  const mailOptions = {
+    from,
+    to: email,
+    subject,
+    html: `Check photo ${photo.name} in attachment`,
+    text: `Check photo ${photo.name} in attachment`,
+    attachments: [{
+      filename: path.basename(photo.src),
+      content: fs.createReadStream(path.join(imagesDirPath, photo.src))
+    }]
+  };
+
+  // send mail with defined transport object
+  mailtransporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return console.log(error);
+    }
+    console.log('Message sent: %s', info.messageId);
+    return false;
+  });
 });
 
 can.on('photo:print', (photo) => {
