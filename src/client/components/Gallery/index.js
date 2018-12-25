@@ -16,7 +16,9 @@ class Gallery extends Component {
   onPrintSelected = () => {
     const { print } = this.props;
     const { selected } = this.state;
+
     print(selected);
+
     this.setState({
       selected: null
     });

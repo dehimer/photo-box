@@ -30,7 +30,7 @@ class Footer extends Component {
   render() {
     const { mode, active, onPrint } = this.props;
     const { emailDialogOpen } = this.state;
-    console.log(`${emailDialogOpen} ${active}`);
+
     let content = null;
 
     if (mode === 'print') {

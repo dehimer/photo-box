@@ -48,9 +48,11 @@ io.on('connection', (socket) => {
     const { type, data } = action;
     switch (type) {
       case 'server/print':
+        console.log('EMIT photo:print');
         can.emit('photo:print', data);
         break;
       case 'server/send':
+        console.log('EMIT photo:send');
         can.emit('photo:send', data);
         break;
       default: console.log(`Unknown action ${type}`);
@@ -82,33 +84,6 @@ can.on('photo:new', (data) => {
   });
 });
 
-can.on('photo:print', (photoData) => {
-  const photo = { ...photoData };
-
-  const formData = {
-    myFile: fs.createReadStream(`${imagesDirPath}/${photo.src}`)
-  };
-
-  photo.uploadedUrl = `${config.photoHostUrl}/${photo.name}`;
-
-  can.emit('photo:update', photo);
-
-  request.post({
-    url: `${config.photoHostUrl}/uploader.php`,
-    formData
-  }, (err, httpResponse, body) => {
-    if (err || body !== 'success') {
-      photo.synced = false;
-      console.error('Photos: Upload failed:', err, body);
-    } else {
-      photo.synced = true;
-      console.log('Photos: Upload successful!  Server responded with:', body);
-    }
-
-    can.emit('photo:update', photo);
-  });
-});
-
 can.on('photo:update', async (photo) => {
   // eslint-disable-next-line no-underscore-dangle
   await db.photos.update({ id: photo.id }, photo);
@@ -117,9 +92,6 @@ can.on('photo:update', async (photo) => {
 });
 
 can.on('photo:send', ({ email, photo }) => {
-  console.log('photo:print');
-  console.log(email);
-  console.log(photo);
   const { mail: { from, subject, urlOnly } } = config;
 
 
