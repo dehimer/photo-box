@@ -125,12 +125,12 @@ can.on('photo:send', ({ email, photo }) => {
 
   const content = urlOnly
     ? `Download photo by link ${photo.uploadedUrl}`
-    : `Check photo ${photo.name} in attachment`;
+    : 'Check photo in attachment';
 
   const mailOptions = {
     from,
     to: email,
-    subject,
+    subject: `${subject} (${photo.name})`,
     html: content,
     text: content,
   };

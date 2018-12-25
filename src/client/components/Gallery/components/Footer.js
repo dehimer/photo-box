@@ -35,7 +35,7 @@ class Footer extends Component {
 
     const content = (mode === 'print')
       ? (
-        emailDialogOpen
+        emailDialogOpen && active
           ? (<EmailDialog handleClose={this.closeEmailDialog} />)
           : (
             <div>

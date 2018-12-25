@@ -14,7 +14,6 @@ class Gallery extends Component {
   };
 
   onPrintSelected = () => {
-    console.log('onPrintSelected');
     const { print } = this.props;
     const { selected } = this.state;
     print(selected);
@@ -24,7 +23,6 @@ class Gallery extends Component {
   };
 
   onSendSelected = (email) => {
-    console.log('onSendSelected');
     const { send } = this.props;
     const { selected } = this.state;
     send({
