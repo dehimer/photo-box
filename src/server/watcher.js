@@ -134,7 +134,9 @@ module.exports = (config, photos, can) => {
         };
 
         if (source.special) {
-          processPhoto(defaultOptions);
+          processPhoto(defaultOptions, (procesedPhoto) => {
+            can.emit('photo:upload', procesedPhoto);
+          });
           processPhoto({
             ...defaultOptions,
             useSecondCrop: true,

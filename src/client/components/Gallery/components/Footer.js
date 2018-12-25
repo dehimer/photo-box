@@ -18,8 +18,6 @@ class Footer extends Component {
   };
 
   closeEmailDialog = (email) => {
-    console.log('closeEmailDialog');
-    console.log(email);
     if (email) {
       const { onSend } = this.props;
       onSend(email);
