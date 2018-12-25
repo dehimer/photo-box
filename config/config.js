@@ -53,7 +53,8 @@ const config = {
       tls: {
         rejectUnauthorized: false
       }
-    }
+    },
+    urlOnly: true
   },
 
   mode: 'print'

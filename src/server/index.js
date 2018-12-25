@@ -120,19 +120,27 @@ can.on('photo:send', ({ email, photo }) => {
   console.log('photo:print');
   console.log(email);
   console.log(photo);
-  const { mail: { from, subject } } = config;
+  const { mail: { from, subject, urlOnly } } = config;
+
+
+  const content = urlOnly
+    ? `Download photo by link ${photo.uploadedUrl}`
+    : `Check photo ${photo.name} in attachment`;
 
   const mailOptions = {
     from,
     to: email,
     subject,
-    html: `Check photo ${photo.name} in attachment`,
-    text: `Check photo ${photo.name} in attachment`,
-    attachments: [{
+    html: content,
+    text: content,
+  };
+
+  if (!urlOnly) {
+    mailOptions.attachments = [{
       filename: path.basename(photo.src),
       content: fs.createReadStream(path.join(imagesDirPath, photo.src))
-    }]
-  };
+    }];
+  }
 
   // send mail with defined transport object
   mailtransporter.sendMail(mailOptions, (error, info) => {

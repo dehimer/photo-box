@@ -33,7 +33,7 @@ class EmailDialog extends Component {
         <GradientButton
           variant="contained"
           color="primary"
-          onClick={handleClose}
+          onClick={() => handleClose()}
         >
           Close
         </GradientButton>
