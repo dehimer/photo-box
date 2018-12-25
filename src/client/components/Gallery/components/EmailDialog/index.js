@@ -10,6 +10,11 @@ class EmailDialog extends Component {
     emailValid: false
   };
 
+  constructor(props) {
+    super(props);
+    this.inputRef = React.createRef();
+  }
+
   handleEmail(email) {
     // eslint-disable-next-line no-useless-escape
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -24,6 +29,8 @@ class EmailDialog extends Component {
     const { handleClose } = this.props;
     const { email, emailValid } = this.state;
 
+    console.log(this.inputRef);
+
     return (
       <div className="email-dialog">
         <input
@@ -32,7 +39,9 @@ class EmailDialog extends Component {
           placeholder="Please, enter email"
           value={email}
           onChange={e => this.handleEmail(e.target.value)}
+          ref={this.inputRef}
         />
+
         <GradientButton
           variant="contained"
           color="primary"
