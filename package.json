@@ -32,6 +32,7 @@
     "react-qr-svg": "^2.1.0",
     "react-redux": "^5.1.1",
     "react-router-dom": "^4.3.1",
+    "react-screen-keyboard": "^1.4.1",
     "redux": "^4.0.1",
     "redux-socket.io": "^1.4.0",
     "request": "^2.88.0",

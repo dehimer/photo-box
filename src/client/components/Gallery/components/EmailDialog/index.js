@@ -27,8 +27,11 @@ class EmailDialog extends Component {
     return (
       <div className="email-dialog">
         <input
-          type="email" id="email" placeholder="Please, enter email"
-          value={email} onChange={e => this.handleEmail(e.target.value)}
+          type="email"
+          id="email"
+          placeholder="Please, enter email"
+          value={email}
+          onChange={e => this.handleEmail(e.target.value)}
         />
         <GradientButton
           variant="contained"
