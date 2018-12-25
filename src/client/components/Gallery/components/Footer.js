@@ -18,10 +18,8 @@ class Footer extends Component {
   };
 
   closeEmailDialog = (email) => {
-    if (email) {
-      const { onSend } = this.props;
-      onSend(email);
-    }
+    const { onSend } = this.props;
+    onSend(email);
 
     this.setState({
       emailDialogOpen: false,
@@ -32,36 +30,40 @@ class Footer extends Component {
   render() {
     const { mode, active, onPrint } = this.props;
     const { emailDialogOpen } = this.state;
+    console.log(`${emailDialogOpen} ${active}`);
+    let content = null;
 
-    const content = (mode === 'print')
-      ? (
-        emailDialogOpen && active
-          ? (<EmailDialog handleClose={this.closeEmailDialog} />)
-          : (
-            <div>
-              <GradientButton
-                variant="contained"
-                color="primary"
-                disabled={!active}
-                onClick={onPrint}
-              >
-                <FontAwesomeIcon icon={faPrint} />
-                Print
-              </GradientButton>
+    if (mode === 'print') {
+      if (emailDialogOpen) {
+        content = (<EmailDialog handleClose={this.closeEmailDialog} />);
+      } else {
+        content = (
+          <div>
+            <GradientButton
+              variant="contained"
+              color="primary"
+              disabled={!active}
+              onClick={onPrint}
+            >
+              <FontAwesomeIcon icon={faPrint} />
+              Print
+            </GradientButton>
 
-              <GradientButton
-                variant="contained"
-                color="primary"
-                disabled={!active}
-                onClick={this.openEmailDialog}
-              >
-                <FontAwesomeIcon icon={faEnvelopeSquare} />
-                Mail
-              </GradientButton>
-            </div>
-          )
-      )
-      : (<div className="intro">请选择下载的照片</div>);
+            <GradientButton
+              variant="contained"
+              color="primary"
+              disabled={!active}
+              onClick={this.openEmailDialog}
+            >
+              <FontAwesomeIcon icon={faEnvelopeSquare} />
+              Mail
+            </GradientButton>
+          </div>
+        );
+      }
+    } else {
+      content = (<div className="intro">请选择下载的照片</div>);
+    }
 
     return (
       <div className="footer">
@@ -83,7 +85,7 @@ Footer.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   onPrint: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
-  onSend: PropTypes.func.isRequired
+  onSend: PropTypes.func.isRequired,
 };
 
 export default Footer;

@@ -25,10 +25,14 @@ class Gallery extends Component {
   onSendSelected = (email) => {
     const { send } = this.props;
     const { selected } = this.state;
-    send({
-      email,
-      photo: selected
-    });
+
+    if (email) {
+      send({
+        email,
+        photo: selected
+      });
+    }
+
     this.setState({
       selected: null
     });
