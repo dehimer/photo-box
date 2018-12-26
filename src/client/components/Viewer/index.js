@@ -121,16 +121,6 @@ const mapStateToProps = (state) => {
     config
   };
 };
-
-const mapDispatchToProps = (/* dispatch */) => (
-  {
-    // addScores: (player) => {
-    //   dispatch({ type: 'server/add_scores', data: player });
-    // },
-  }
-);
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
 )(withRouter(Viewer));

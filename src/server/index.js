@@ -78,7 +78,6 @@ db.photos.find({}).exec((err, photos) => {
 });
 
 can.on('photo:new', (data) => {
-  // Пишем в базу
   db.photos.insert(data, (err) => {
     if (!err) can.emit('photos:sync');
   });
@@ -125,34 +124,29 @@ can.on('photo:send', ({ email, photo }) => {
 });
 
 can.on('photo:print', (photo) => {
-  console.log('photo:print');
-  console.log(photo);
   const fullname = path.basename(photo.src);
-  console.log(fullname);
+
   const photoPath = path.join(imagesDirPath, photo.src);
-  console.log('photoPath:');
-  console.log(photoPath);
+
   const printDir = path.join(imagesDirPath, 'print');
   if (!fs.existsSync(printDir)) {
     fs.mkdirSync(printDir);
   }
+
   const printName = path.join(imagesDirPath, 'print', `${(new Date()).getTime()}${fullname}`);
-  console.log('printName:');
-  console.log(printName);
+
   gm(photoPath).write(printName, (err) => {
     if (err) {
       console.log(err);
       return;
     }
     const cmd = `rundll32 shimgvw.dll,ImageView_PrintTo "${printName}" "${config.printerName}"`;
-    console.log('cmd:');
-    console.log(cmd);
 
     exec(cmd, (error, stdout, stderr) => {
       if (error || stderr) {
         console.log(error, stderr);
       } else {
-        console.log('Printing');
+        console.log('Printing...');
         setTimeout(() => {
           fs.unlink(printName);
         }, 15000);

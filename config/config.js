@@ -32,6 +32,7 @@ const config = {
 
   imagesPerPage: 200,
   viewerCloseAfter: 35,
+  emailFormCloseAfter: 60,
 
   photoHostUrl: 'http://zzhkg.silkroadcg.top',
 

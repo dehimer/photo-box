@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import connect from 'react-redux/es/connect/connect';
+import { withRouter } from 'react-router-dom';
+
 import Keyboard from 'react-simple-keyboard';
 import 'react-simple-keyboard/build/css/index.css';
+
 import GradientButton from '../GradientButton';
 
 import './index.css';
+
 
 class EmailDialog extends Component {
   state = {
@@ -12,6 +17,20 @@ class EmailDialog extends Component {
     emailValid: false,
     layoutName: 'default',
   };
+
+  closeTimer = null;
+
+  componentDidMount() {
+    this.setCloseTimer();
+  }
+
+  componentDidUpdate() {
+    this.setCloseTimer();
+  }
+
+  componentWillUnmount() {
+    this.unsetCloseTimer();
+  }
 
   onChangeInput = (event) => {
     const email = event.target.value;
@@ -24,6 +43,17 @@ class EmailDialog extends Component {
     if (button === '{shift}' || button === '{lock}') this.handleShift();
   };
 
+  setCloseTimer() {
+    const { handleClose, config: { emailFormCloseAfter } } = this.props;
+    clearTimeout(this.closeTimer);
+
+    if (emailFormCloseAfter) {
+      this.closeTimer = setTimeout(() => {
+        handleClose();
+      }, emailFormCloseAfter * 1000);
+    }
+  }
+
   handleShift = () => {
     const { layoutName } = this.state;
 
@@ -32,7 +62,14 @@ class EmailDialog extends Component {
     });
   };
 
+  unsetCloseTimer() {
+    clearTimeout(this.closeTimer);
+
+    this.closeTimer = null;
+  }
+
   handleEmail(email) {
+    this.setCloseTimer();
     // eslint-disable-next-line no-useless-escape
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -89,7 +126,17 @@ class EmailDialog extends Component {
 
 EmailDialog.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
-  handleClose: PropTypes.func.isRequired
+  handleClose: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  config: PropTypes.object.isRequired,
 };
 
-export default EmailDialog;
+const mapStateToProps = (state) => {
+  const { config } = state.server;
+  return { config };
+};
+
+
+export default connect(
+  mapStateToProps,
+)(withRouter(EmailDialog));
