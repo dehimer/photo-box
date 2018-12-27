@@ -1,6 +1,5 @@
 const nodemailer = require('nodemailer');
 const express = require('express');
-const Emitter = require('events');
 const request = require('request');
 const fs = require('fs');
 const NeDB = require('nedb');
@@ -8,9 +7,12 @@ const socketIO = require('socket.io');
 const http = require('http');
 const path = require('path');
 const gm = require('gm');
-const exec = require('child_process').exec;
-const config = require('../../config/config');
+const { exec } = require('child_process');
+const Emitter = require('events');
+
 const watcher = require('./watcher');
+const cleanup = require('./cleanup');
+const config = require('../../config/config');
 
 const can = new Emitter();
 
@@ -44,15 +46,12 @@ io.on('connection', (socket) => {
   can.emit('photos:sync', socket);
 
   socket.on('action', (action) => {
-    console.log(action);
     const { type, data } = action;
     switch (type) {
       case 'server/print':
-        console.log('EMIT photo:print');
         can.emit('photo:print', data);
         break;
       case 'server/send':
-        console.log('EMIT photo:send');
         can.emit('photo:send', data);
         break;
       default: console.log(`Unknown action ${type}`);
@@ -62,10 +61,6 @@ io.on('connection', (socket) => {
 
 // DB
 const db = {
-  stats: new NeDB({
-    filename: 'db/stats.db',
-    autoload: true
-  }),
   photos: new NeDB({
     filename: 'db/photos.db',
     autoload: true
@@ -75,6 +70,8 @@ const db = {
 db.photos.find({}).exec((err, photos) => {
   const count = photos.length || 0;
   console.log(`Found ${count} photos`);
+  cleanup(imagesDirPath, photos);
+  // , config.imagesPerPage
 });
 
 can.on('photo:new', (data) => {
