@@ -76,7 +76,7 @@ const processPhoto = (params, cb) => {
 };
 
 
-module.exports = (config, photos, can) => {
+module.exports = async (config, photos, can) => {
   // DIRS
   const dirs = ['images/', 'images/standart', 'images/thumbnail'];
   const sources = config.sources.map((rowSource) => {
@@ -92,8 +92,17 @@ module.exports = (config, photos, can) => {
       });
     }
 
-    photos.count({ label: source.label }, (err, count) => {
-      sourcesLastNumByLabel[source.label] = count;
+    photos.find({ label: source.label }).sort({ date: -1 }).limit(1).exec((err, photos) => {
+      if (err) throw new Error(err);
+      console.log(`label: ${source.label}`);
+      console.log(photos);
+
+      if (photos && photos.length === 1) {
+        const photo = photos[0];
+        sourcesLastNumByLabel[source.label] = parseInt(photo.id.replace(source.label, ''), 10) + 1;
+      } else {
+        sourcesLastNumByLabel[source.label] = 0;
+      }
     });
 
     return source;
