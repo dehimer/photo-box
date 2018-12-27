@@ -9,6 +9,7 @@ const path = require('path');
 const gm = require('gm');
 const { exec } = require('child_process');
 const Emitter = require('events');
+const _ = require('underscore');
 
 const watcher = require('./watcher');
 const cleanup = require('./cleanup');
@@ -74,22 +75,64 @@ db.photos.find({}).exec((err, photos) => {
   // , config.imagesPerPage
 });
 
-can.on('photo:new', (data) => {
-  db.photos.insert(data, (err) => {
-    if (!err) can.emit('photos:sync');
+
+const cleanOld = () => {
+  console.log('cleanOld');
+  const { imagesPerPage } = config;
+
+  db.photos.count({}, (countErr, photosCount) => {
+    if (countErr) throw new Error(countErr);
+
+    console.log(`imagesPerPage: ${imagesPerPage}`);
+    console.log(`photosCount: ${photosCount}`);
+
+    if (photosCount > imagesPerPage) {
+      db.photos.find({}).sort({ date: -1 }).skip(imagesPerPage).exec((findErr, photosOverflow) => {
+        if (findErr) throw new Error(findErr);
+
+        console.log(`photosOverflow (${photosOverflow.length})`);
+
+        photosOverflow.forEach(async (photo) => {
+          // remove foto from db
+          await db.photos.remove({ _id: photo._id });
+
+          // remove files of photo
+          console.log(`Gonna be deleted ${path.join(imagesDirPath, photo.src)}`);
+          fs.unlink(path.join(imagesDirPath, photo.src), (err) => {
+            if (err) console.error(err);
+            console.log(`Overflowed file ${photo.src} is deleted`);
+          });
+
+          console.log(`Gonna be deleted ${path.join(imagesDirPath, photo.thumb)}`);
+          fs.unlink(path.join(imagesDirPath, photo.thumb), (err) => {
+            if (err) console.error(err);
+            console.log(`Overflowed file ${photo.thumb} is deleted`);
+          });
+        });
+      });
+    }
+  });
+};
+
+const cleanOldThrottled = _.throttle(cleanOld, 5000);
+
+can.on('photo:new', async (data) => {
+  db.photos.insert(data, () => {
+    // remove over limit
+    can.emit('photos:sync');
+    cleanOldThrottled();
   });
 });
 
 can.on('photo:update', async (photo) => {
   // eslint-disable-next-line no-underscore-dangle
-  await db.photos.update({ id: photo.id }, photo);
+  await db.photos.update({ _id: photo._id }, photo);
   // send to all clients
   can.emit('photos:sync');
 });
 
 can.on('photo:send', ({ email, photo }) => {
   const { mail: { from, subject, urlOnly } } = config;
-
 
   const content = urlOnly
     ? `Download photo by link ${photo.uploadedUrl}`
@@ -181,6 +224,8 @@ can.on('photo:upload', (photoData) => {
 
 can.on('photos:sync', (socket = io) => {
   db.photos.find({}).sort({ date: -1 }).limit(config.imagesPerPage).exec((err, photos) => {
+    // console.log('photos:');
+    // console.log(photos);
     socket.emit('action', { type: 'photos', data: photos });
   });
 });

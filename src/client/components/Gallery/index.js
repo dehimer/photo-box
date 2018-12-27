@@ -81,7 +81,7 @@ class Gallery extends Component {
 
                     return (
                       <Photo
-                        key={photo.id}
+                        key={photo._id}
                         photo={photo}
                         inFocus={inFocus}
                         onSelect={this.onSelect}

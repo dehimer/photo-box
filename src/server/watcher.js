@@ -19,8 +19,11 @@ const processPhoto = (params, cb) => {
 
   const date = new Date();
 
-  const photoLabel = source.label + ((sourcesLastNumByLabel[source.label] % imagesPerPage) + 1);
-  const photoDate = `${date.getFullYear()}-${(date.getMonth() + 1)}-${date.getDate()}-${date.getHours()}-${date.getMinutes()}`;
+  sourcesLastNumByLabel[source.label] = (sourcesLastNumByLabel[source.label] + 1) % imagesPerPage;
+
+  const photoLabel = source.label + sourcesLastNumByLabel[source.label];
+  console.log(`+ID: ${photoLabel}`);
+  const photoDate = `${date.getFullYear()}-${(date.getMonth() + 1)}-${date.getDate()}-${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}-${date.getMilliseconds()}`;
   const shortName = `${photoDate}-${photoLabel}`;
   const photoName = `${imagesDirPath}/standart/${shortName}.jpg`;
   const thumbName = `${imagesDirPath}/thumbnail/${shortName}.jpg`;
@@ -44,8 +47,6 @@ const processPhoto = (params, cb) => {
     image.resize(source.frameWidth, source.frameHeight, '!')
       .draw([`image Over 0,0 0,0 ${source.frame}`]);
   }
-
-  sourcesLastNumByLabel[source.label] += 1;
 
   // Создаем картинку
   image.quality(100).write(photoName, () => {
@@ -103,6 +104,8 @@ module.exports = async (config, photos, can) => {
       } else {
         sourcesLastNumByLabel[source.label] = 0;
       }
+
+      sourcesLastNumByLabel[source.label] = sourcesLastNumByLabel[source.label] % config.imagesPerPage;
     });
 
     return source;
@@ -144,20 +147,22 @@ module.exports = async (config, photos, can) => {
 
         if (source.special) {
           processPhoto(defaultOptions, (procesedPhoto) => {
+            console.log('procesedPhoto');
             can.emit('photo:upload', procesedPhoto);
-          });
-          processPhoto({
-            ...defaultOptions,
-            useSecondCrop: true,
-          }, (procesedPhoto) => {
-            console.log('procesedPhoto1');
-            console.log(procesedPhoto);
-            if (config.deleteAfterImport) {
-              fs.unlink(file, () => {
-                console.log(`Source file ${file} is deleted`);
-              });
-            }
-            can.emit('photo:upload', procesedPhoto);
+
+            processPhoto({
+              ...defaultOptions,
+              useSecondCrop: true,
+            }, (procesedPhoto1) => {
+              console.log('procesedPhoto1');
+              console.log(procesedPhoto1);
+              if (config.deleteAfterImport) {
+                fs.unlink(file, () => {
+                  console.log(`Source file ${file} is deleted`);
+                });
+              }
+              can.emit('photo:upload', procesedPhoto1);
+            });
           });
         } else {
           processPhoto(defaultOptions, (procesedPhoto) => {

@@ -28,7 +28,7 @@ exports = module.exports = (imagesDirPath, photos) => {
         if (!filesWhichExists.includes(path.join(dirName, file))) {
           const filePath = path.join(subDirPath, file);
           fs.unlink(filePath, () => {
-            console.log(`File ${filePath} is deleted`);
+            console.log(`Delete orphaned ${filePath} file`);
           });
         }
       });
