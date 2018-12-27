@@ -30,7 +30,7 @@ const config = {
   deleteAfterImport: true,
   useWatchFile: false,
 
-  imagesPerPage: 4,
+  imagesPerPage: 100,
   viewerCloseAfter: 35,
   emailFormCloseAfter: 60,
 
