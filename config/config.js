@@ -57,6 +57,8 @@ const config = {
     },
     urlOnly: true
   },
+
+  mode: 'print'
 };
 
 if (typeof module !== 'undefined' && module.exports) {
