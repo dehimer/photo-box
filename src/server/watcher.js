@@ -69,9 +69,7 @@ const processPhoto = (params, cb) => {
           id: photoLabel
         };
 
-        can.emit('photo:new', photo);
-
-        if (cb) cb(photo);
+        can.emit('photo:new', { data: photo, cb });
       });
   });
 };

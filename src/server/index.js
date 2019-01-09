@@ -116,11 +116,13 @@ const cleanOld = () => {
 
 const cleanOldThrottled = _.throttle(cleanOld, 5000);
 
-can.on('photo:new', async (data) => {
-  db.photos.insert(data, () => {
+can.on('photo:new', async ({ data, cb }) => {
+  db.photos.insert(data, (err, newData) => {
+    if (err) return;
     // remove over limit
     can.emit('photos:sync');
     cleanOldThrottled();
+    if (cb) cb(newData);
   });
 });
 
@@ -224,8 +226,6 @@ can.on('photo:upload', (photoData) => {
 
 can.on('photos:sync', (socket = io) => {
   db.photos.find({}).sort({ date: -1 }).limit(config.imagesPerPage).exec((err, photos) => {
-    // console.log('photos:');
-    // console.log(photos);
     socket.emit('action', { type: 'photos', data: photos });
   });
 });
