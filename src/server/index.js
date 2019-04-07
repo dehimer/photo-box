@@ -13,9 +13,16 @@ const _ = require('underscore');
 
 const watcher = require('./watcher');
 const cleanup = require('./cleanup');
-const config = require('../../config/config');
 
 const can = new Emitter();
+
+const configPath = path.join(__dirname, '..', '..', 'config', 'config.js');
+let config = require(configPath);
+fs.watchFile(configPath, () => {
+  delete require.cache[require.resolve(configPath)];
+  config = require(configPath);
+  can.emit('config:sync');
+});
 
 // create reusable transporter object using the default SMTP transport
 const mailtransporter = nodemailer.createTransport(config.mail.smtp);
