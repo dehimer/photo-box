@@ -64,7 +64,7 @@ class Gallery extends Component {
       <Fragment>
         <div className="gallery">
           {
-            sources && sources.map(({ label }) => (
+            sources && sources.map(({ label, columns }) => (
               <div key={label} className="panel">
                 {
                   photos.map((photo) => {
@@ -83,6 +83,7 @@ class Gallery extends Component {
                       <Photo
                         key={photo._id}
                         photo={photo}
+                        columns={columns}
                         inFocus={inFocus}
                         onSelect={this.onSelect}
                         shadowed={shadowed}

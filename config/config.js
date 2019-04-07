@@ -18,7 +18,8 @@ const config = {
         y: 46,
         width: 1334,
         height: 983
-      }
+      },
+      columns: 3
     }
   ],
 

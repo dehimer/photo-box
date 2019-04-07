@@ -27,13 +27,16 @@ class Photo extends React.Component {
   }
 
   render() {
-    const { photo, onSelect, shadowed } = this.props;
+    const { photo, onSelect, shadowed, columns } = this.props;
 
     return (
       <div
         className={`gallery-photo ${shadowed ? 'shadowed' : ''}`}
         ref={this.ref}
         onClick={() => onSelect(photo)}
+        style={{
+          flex: `0 0 calc(100%/${columns})`
+        }}
       >
         <div className="label">{photo.id}</div>
         <img alt={photo.name} src={`/images/${photo.thumb}`} />
@@ -48,6 +51,7 @@ Photo.propTypes = {
   inFocus: PropTypes.bool.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   photo: PropTypes.object.isRequired,
+  columns: PropTypes.number.isRequired
 };
 
 export default Photo;
