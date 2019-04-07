@@ -60,6 +60,10 @@ class Gallery extends Component {
     const fromPhotoId = match.params.from;
     const { sources, mode } = config;
 
+    const totalColumns = sources
+      ? sources.map(({ columns }) => columns).reduce((res, columns) => res + columns, 0)
+      : 0;
+
     return (
       <Fragment>
         <div className="gallery">
@@ -84,6 +88,7 @@ class Gallery extends Component {
                         key={photo._id}
                         photo={photo}
                         columns={columns}
+                        totalColumns={totalColumns}
                         inFocus={inFocus}
                         onSelect={this.onSelect}
                         shadowed={shadowed}

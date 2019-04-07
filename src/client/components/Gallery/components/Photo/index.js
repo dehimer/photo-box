@@ -27,7 +27,7 @@ class Photo extends React.Component {
   }
 
   render() {
-    const { photo, onSelect, shadowed, columns } = this.props;
+    const { photo, onSelect, shadowed, columns, totalColumns } = this.props;
 
     return (
       <div
@@ -35,7 +35,8 @@ class Photo extends React.Component {
         ref={this.ref}
         onClick={() => onSelect(photo)}
         style={{
-          flex: `0 0 calc(100%/${columns})`
+          flex: `0 0 calc(100%/${columns})`,
+          height: `calc(100%/${totalColumns})`
         }}
       >
         <div className="label">{photo.id}</div>
@@ -51,7 +52,8 @@ Photo.propTypes = {
   inFocus: PropTypes.bool.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   photo: PropTypes.object.isRequired,
-  columns: PropTypes.number.isRequired
+  columns: PropTypes.number.isRequired,
+  totalColumns: PropTypes.number.isRequired
 };
 
 export default Photo;
