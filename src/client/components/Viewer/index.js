@@ -85,15 +85,19 @@ class Viewer extends PureComponent {
 
         <div className="qr-block">
           <div className="note">扫描二维码下载照片</div>
-          <div className="qr">
-            <QRCode
-              bgColor="white"
-              fgColor="black"
-              level="Q"
-              style={{ width: 256 }}
-              value={photo.uploadedUrl}
-            />
-          </div>
+          {
+            photo.uploadedUrl && (
+              <div className="qr">
+                <QRCode
+                  bgColor="white"
+                  fgColor="black"
+                  level="Q"
+                  style={{ width: 256 }}
+                  value={photo.uploadedUrl}
+                />
+              </div>
+            )
+          }
         </div>
 
         <Link className="close" to={`/${photo.id}`}>返回</Link>

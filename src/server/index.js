@@ -123,19 +123,22 @@ const cleanOld = () => {
 
 const cleanOldThrottled = _.throttle(cleanOld, 5000);
 
-can.on('photo:new', async (data) => {
-  db.photos.insert(data, () => {
+can.on('photo:new', async (data, cb) => {
+  db.photos.insert(data, (err, res) => {
+    if (!err) cb(res);
+
     // remove over limit
     can.emit('photos:sync');
     cleanOldThrottled();
   });
 });
 
-can.on('photo:update', async (photo) => {
+can.on('photo:update', (photo) => {
   // eslint-disable-next-line no-underscore-dangle
-  await db.photos.update({ _id: photo._id }, photo);
-  // send to all clients
-  can.emit('photos:sync');
+  db.photos.update({ _id: photo._id }, photo, (err, res) => {
+    // send to all clients
+    can.emit('photos:sync');
+  });
 });
 
 can.on('photo:send', ({ email, photo }) => {
@@ -231,14 +234,11 @@ can.on('photo:upload', (photoData) => {
 
 can.on('photos:sync', (socket = io) => {
   db.photos.find({}).sort({ date: -1 }).limit(config.imagesPerPage).exec((err, photos) => {
-    // console.log('photos:');
-    // console.log(photos);
     socket.emit('action', { type: 'photos', data: photos });
   });
 });
 
 can.on('config:sync', (socket = io) => {
-  console.log('config:sync');
   socket.emit('action', { type: 'config', data: config });
 });
 

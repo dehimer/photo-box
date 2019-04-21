@@ -69,9 +69,9 @@ const processPhoto = (params, cb) => {
           id: photoLabel
         };
 
-        can.emit('photo:new', photo);
-
-        if (cb) cb(photo);
+        can.emit('photo:new', photo, (data) => {
+          if (cb) cb(data);
+        });
       });
   });
 };
@@ -95,8 +95,6 @@ module.exports = async (config, photos, can) => {
 
     photos.find({ label: source.label }).sort({ date: -1 }).limit(1).exec((err, photos) => {
       if (err) throw new Error(err);
-      console.log(`label: ${source.label}`);
-      console.log(photos);
 
       if (photos && photos.length === 1) {
         const photo = photos[0];
