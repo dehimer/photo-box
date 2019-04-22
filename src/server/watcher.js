@@ -55,7 +55,8 @@ function prepareSources(config, photosDB) {
 }
 
 function processPhoto(params, cb) {
-  console.log('processPhoto');
+  // console.log('processPhoto');
+  // console.log(params);
   const {
     file,
     source,
@@ -129,7 +130,9 @@ function processPhoto(params, cb) {
 
 
 function createWatchers(sources, config, prevWatchers, can) {
-  prevWatchers.forEach((watcher) => watcher.clear());
+  for (const watcher of prevWatchers) {
+    watcher.clear();
+  }
 
   return sources.map((source) => {
     let photoWatcher;
@@ -196,11 +199,12 @@ function createWatchers(sources, config, prevWatchers, can) {
 }
 
 
-
-module.exports = async (config, photos, can) => {
+module.exports = async (config, imagesDirPath, photos, can) => {
 
   let sources = [];
   let watchers = [];
+
+  Object.assign(config, { imagesDirPath });
 
   sources = prepareSources(config, photos);
   watchers = createWatchers(sources, config, watchers, can);
@@ -208,6 +212,7 @@ module.exports = async (config, photos, can) => {
   can.on('config:updated', (newConfig) => {
     console.log('config:updated');
     console.log(newConfig.sources);
+    Object.assign(newConfig, { imagesDirPath });
     // Object.assign(config, data);
 
     sources = prepareSources(newConfig, photos);

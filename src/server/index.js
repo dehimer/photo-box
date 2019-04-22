@@ -244,4 +244,4 @@ can.on('config:sync', (socket = io) => {
 });
 
 
-watcher({ ...config, imagesDirPath }, db.photos, can);
+watcher(config, imagesDirPath, db.photos, can);
