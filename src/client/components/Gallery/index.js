@@ -54,6 +54,15 @@ class Gallery extends Component {
     }
   };
 
+  componentDidUpdate() {
+    setTimeout(() => {
+      window.scrollTo({
+        top: 1000,
+        behavior: 'smooth'
+      });
+    }, 1000);
+  }
+
   render() {
     const { selected } = this.state;
     const { config, photos, match } = this.props;
