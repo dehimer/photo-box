@@ -21,6 +21,7 @@ let config = require(configPath);
 fs.watchFile(configPath, () => {
   delete require.cache[require.resolve(configPath)];
   config = require(configPath);
+  can.emit('config:updated', config);
   can.emit('config:sync');
 });
 

@@ -4,9 +4,58 @@ const gm = require('gm');
 const fs = require('fs');
 
 
-const sourcesLastNumByLabel = {};
+const sourcesLastNumByLabel = {
+};
 
-const processPhoto = (params, cb) => {
+function prepareSources(config, photosDB) {
+  const dirs = ['images/', 'images/standart', 'images/thumbnail'];
+
+  // create images directories is not exists
+  dirs.forEach((dir) => {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
+  });
+
+  return config.sources.map((rowSource) => {
+    const source = {
+      ...rowSource
+    };
+
+    dirs.push(source.watchpath);
+
+    if (source.frame) {
+      gm(source.frame).size((err, sizes) => {
+        if (err) return;
+
+        source.frameWidth = sizes.width;
+        source.frameHeight = sizes.height;
+      });
+    }
+
+    photosDB.find({
+      label: source.label
+    }).sort({
+      date: -1
+    }).limit(1).exec((err, photos) => {
+      if (err) throw new Error(err);
+
+      if (photos && photos.length === 1) {
+        const photo = photos[0];
+        sourcesLastNumByLabel[source.label] = parseInt(photo.id.replace(source.label, ''), 10) + 1;
+      } else {
+        sourcesLastNumByLabel[source.label] = 0;
+      }
+
+      sourcesLastNumByLabel[source.label] %= config.imagesPerPage;
+    });
+
+    return source;
+  });
+}
+
+function processPhoto(params, cb) {
+  console.log('processPhoto');
   const {
     file,
     source,
@@ -31,6 +80,8 @@ const processPhoto = (params, cb) => {
   const image = gm(file);
 
   const crop = useSecondCrop ? source.crop2 : source.crop;
+  console.log(`crop ${useSecondCrop}`);
+  console.log(crop);
   if (crop) {
     image.crop(crop.width, crop.height, crop.x, crop.y);
   }
@@ -74,50 +125,13 @@ const processPhoto = (params, cb) => {
         });
       });
   });
-};
+}
 
 
-module.exports = async (config, photos, can) => {
-  // DIRS
-  const dirs = ['images/', 'images/standart', 'images/thumbnail'];
-  const sources = config.sources.map((rowSource) => {
-    const source = { ...rowSource };
-    dirs.push(source.watchpath);
+function createWatchers(sources, config, prevWatchers, can) {
+  prevWatchers.forEach((watcher) => watcher.clear());
 
-    if (source.frame) {
-      gm(source.frame).size((err, sizes) => {
-        if (err) return;
-
-        source.frameWidth = sizes.width;
-        source.frameHeight = sizes.height;
-      });
-    }
-
-    photos.find({ label: source.label }).sort({ date: -1 }).limit(1).exec((err, photos) => {
-      if (err) throw new Error(err);
-
-      if (photos && photos.length === 1) {
-        const photo = photos[0];
-        sourcesLastNumByLabel[source.label] = parseInt(photo.id.replace(source.label, ''), 10) + 1;
-      } else {
-        sourcesLastNumByLabel[source.label] = 0;
-      }
-
-      sourcesLastNumByLabel[source.label] = sourcesLastNumByLabel[source.label] % config.imagesPerPage;
-    });
-
-    return source;
-  });
-
-  // create images directories is not exists
-  dirs.forEach((dir) => {
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir);
-    }
-  });
-
-
-  sources.forEach((source) => {
+  return sources.map((source) => {
     let photoWatcher;
 
     // На сетевых дисках когда много файлов fs.watch начинает падать с ошибкой
@@ -176,5 +190,27 @@ module.exports = async (config, photos, can) => {
         }
       }, 3000);
     });
+
+    return photoWatcher;
+  });
+}
+
+
+
+module.exports = async (config, photos, can) => {
+
+  let sources = [];
+  let watchers = [];
+
+  sources = prepareSources(config, photos);
+  watchers = createWatchers(sources, config, watchers, can);
+
+  can.on('config:updated', (newConfig) => {
+    console.log('config:updated');
+    console.log(newConfig.sources);
+    // Object.assign(config, data);
+
+    sources = prepareSources(newConfig, photos);
+    watchers = createWatchers(sources, newConfig, watchers, can);
   });
 };
