@@ -28,6 +28,9 @@ const config = {
     height: 200
   },
 
+  scrollToTopOnNewPhoto: true,
+  ignoreAutoscrollAfterManualScrollIn: 5000,
+
   deleteAfterImport: true,
   useWatchFile: false,
 

@@ -26,6 +26,10 @@ class Photo extends React.Component {
     }
   }
 
+  photoLoaded = () => {
+    this.props.onLoad();
+  };
+
   render() {
     const { photo, onSelect, shadowed, columns, totalColumns } = this.props;
 
@@ -40,7 +44,7 @@ class Photo extends React.Component {
         }}
       >
         <div className="label">{photo.id}</div>
-        <img alt={photo.name} src={`/images/${photo.thumb}`} />
+        <img alt={photo.name} src={`/images/${photo.thumb}`} onLoad={this.photoLoaded} />
       </div>
     );
   }

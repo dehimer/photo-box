@@ -62,6 +62,10 @@ class Gallery extends Component {
   render() {
     const { selected } = this.state;
     const { config, photos, match } = this.props;
+    const {
+      scrollToTopOnNewPhoto = false,
+      ignoreAutoscrollAfterManualScrollIn = 10000,
+    } = config;
     const fromPhotoId = match.params.from;
     const { sources, mode } = config;
 
@@ -73,36 +77,22 @@ class Gallery extends Component {
       <Fragment>
         <div className="gallery">
           {
-            sources && sources.map(({ label, columns }) => (
-              <Panel key={label}>
-                {
-                  photos.map((photo) => {
-                    let inFocus;
-                    let shadowed;
+            sources && sources.map(({ label, columns }) => {
+              const photosOfSource = photos.filter(photo => photo.label === label);
 
-                    if (mode === 'print') {
-                      inFocus = false;
-                      shadowed = selected ? selected.id !== photo.id : false;
-                    } else {
-                      inFocus = (photo.id === fromPhotoId);
-                      shadowed = false;
-                    }
-
-                    return (
-                      <Photo
-                        key={photo._id}
-                        photo={photo}
-                        columns={columns}
-                        totalColumns={totalColumns}
-                        inFocus={inFocus}
-                        onSelect={this.onSelect}
-                        shadowed={shadowed}
-                      />
-                    );
-                  })
-                }
-              </Panel>
-            ))
+              return <Panel
+                key={label}
+                photos={photosOfSource}
+                columns={columns}
+                totalColumns={totalColumns}
+                fromPhotoId={fromPhotoId}
+                onSelect={this.onSelect}
+                mode={mode}
+                selected={selected}
+                scrollToTopOnNewPhoto={scrollToTopOnNewPhoto}
+                ignoreAutoscrollAfterManualScrollIn={ignoreAutoscrollAfterManualScrollIn}
+              />;
+            })
           }
         </div>
         <Footer
