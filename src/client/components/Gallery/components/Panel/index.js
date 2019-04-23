@@ -24,8 +24,15 @@ class Panel extends Component {
   //   return true;
   // }
   componentWillUnmount() {
-    clearTimeout(this.userScrollTimeout);
-    this.userScrollTimeout = null;
+    if (this.userScrollTimeout) {
+      clearTimeout(this.userScrollTimeout);
+      this.userScrollTimeout = null;
+    }
+
+    if (this.noActivityAutoscrollTimeout) {
+      clearTimeout(this.noActivityAutoscrollTimeout);
+      this.noActivityAutoscrollTimeout = null;
+    }
   }
 
   scrollTop = () => {
@@ -55,6 +62,31 @@ class Panel extends Component {
   };
 
   scrollDetect = () => {
+    this.updateAutoScrollDisable();
+    this.updateNoActivityTopScroll();
+  };
+
+  updateNoActivityTopScroll() {
+    const { noActivityAutoScrollIn } = this.props;
+
+    if (this.noActivityAutoscrollTimeout) {
+      clearTimeout(this.noActivityAutoscrollTimeout);
+      this.noActivityAutoscrollTimeout = null;
+    }
+
+    this.noActivityAutoscrollTimeout = setTimeout(() => {
+      clearTimeout(this.noActivityAutoscrollTimeout);
+      this.noActivityAutoscrollTimeout = null;
+
+      this.panelRef.current.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+    }, noActivityAutoScrollIn);
+  }
+
+  updateAutoScrollDisable() {
     const { disableAutoScrollTop } = this.state;
     const { ignoreAutoscrollAfterManualScrollIn } = this.props;
 
@@ -80,7 +112,7 @@ class Panel extends Component {
         disableAutoScrollTop: false
       });
     }, ignoreAutoscrollAfterManualScrollIn);
-  };
+  }
 
   render() {
     const {
@@ -136,6 +168,7 @@ Panel.propTypes = {
   onSelect: PropTypes.func.isRequired,
   totalColumns: PropTypes.number.isRequired,
   ignoreAutoscrollAfterManualScrollIn: PropTypes.number.isRequired,
+  noActivityAutoScrollIn: PropTypes.number.isRequired,
   scrollToTopOnNewPhoto: PropTypes.bool.isRequired
 };
 

@@ -65,6 +65,7 @@ class Gallery extends Component {
     const {
       scrollToTopOnNewPhoto = false,
       ignoreAutoscrollAfterManualScrollIn = 10000,
+      noActivityAutoScrollIn = 10000
     } = config;
     const fromPhotoId = match.params.from;
     const { sources, mode } = config;
@@ -91,6 +92,7 @@ class Gallery extends Component {
                 selected={selected}
                 scrollToTopOnNewPhoto={scrollToTopOnNewPhoto}
                 ignoreAutoscrollAfterManualScrollIn={ignoreAutoscrollAfterManualScrollIn}
+                noActivityAutoScrollIn={noActivityAutoScrollIn}
               />;
             })
           }

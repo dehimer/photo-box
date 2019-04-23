@@ -30,6 +30,7 @@ const config = {
 
   scrollToTopOnNewPhoto: true,
   ignoreAutoscrollAfterManualScrollIn: 5000,
+  noActivityAutoScrollIn: 60000,
 
   deleteAfterImport: true,
   useWatchFile: false,
