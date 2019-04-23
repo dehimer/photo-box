@@ -6,12 +6,17 @@ import PropTypes from 'prop-types';
 import './index.css';
 
 import Photo from './components/Photo';
+import Panel from './components/Panel';
 import Footer from './components/Footer';
 
 class Gallery extends Component {
   state = {
     selected: null
   };
+
+  constructor(props) {
+    super(props);
+  }
 
   onPrintSelected = () => {
     const { print } = this.props;
@@ -54,15 +59,6 @@ class Gallery extends Component {
     }
   };
 
-  componentDidUpdate() {
-    setTimeout(() => {
-      window.scrollTo({
-        top: 1000,
-        behavior: 'smooth'
-      });
-    }, 1000);
-  }
-
   render() {
     const { selected } = this.state;
     const { config, photos, match } = this.props;
@@ -78,7 +74,7 @@ class Gallery extends Component {
         <div className="gallery">
           {
             sources && sources.map(({ label, columns }) => (
-              <div key={label} className="panel">
+              <Panel key={label}>
                 {
                   photos.map((photo) => {
                     let inFocus;
@@ -105,7 +101,7 @@ class Gallery extends Component {
                     );
                   })
                 }
-              </div>
+              </Panel>
             ))
           }
         </div>
