@@ -27,10 +27,12 @@ const config = {
     height: 200
   },
 
+  // daysToDelete: 1, // if defined and greater than 0 - delete
+  // hoursOfDeleteCheck: 1,
   deleteAfterImport: true,
   useWatchFile: false,
 
-  imagesPerPage: 100,
+  imagesPerPage: 3,
   viewerCloseAfter: 35,
   emailFormCloseAfter: 60,
 
