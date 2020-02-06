@@ -2,6 +2,7 @@
 const hound = require('hound');
 const gm = require('gm');
 const fs = require('fs');
+const path = require('path');
 
 
 const sourcesLastNumByLabel = {};
@@ -105,7 +106,7 @@ module.exports = async (config, photos, can) => {
         sourcesLastNumByLabel[source.label] = 0;
       }
 
-      sourcesLastNumByLabel[source.label] = sourcesLastNumByLabel[source.label] % config.imagesPerPage;
+      sourcesLastNumByLabel[source.label] %= config.imagesPerPage;
     });
 
     return source;
@@ -121,6 +122,21 @@ module.exports = async (config, photos, can) => {
 
   sources.forEach((source) => {
     let photoWatcher;
+
+    fs.readdir(source.watchpath, (err, files) => {
+      if (err) throw err;
+
+      if (files.length > 0) {
+        console.log(`Delete files in ${config.watchpath} leaved from last run`);
+
+        files.forEach((file) => {
+          console.log(`Deletion of ${file}`);
+          fs.unlink(path.join(source.watchpath, file), (err) => {
+            if (err) throw err;
+          });
+        });
+      }
+    });
 
     // На сетевых дисках когда много файлов fs.watch начинает падать с ошибкой
     if (config.useWatchFile) {
