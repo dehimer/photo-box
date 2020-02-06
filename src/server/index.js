@@ -12,6 +12,7 @@ const Emitter = require('events');
 const _ = require('underscore');
 
 const watcher = require('./watcher');
+const autocleaner = require('./autocleaner');
 const cleanup = require('./cleanup');
 const config = require('../../config/config');
 
@@ -75,52 +76,11 @@ db.photos.find({}).exec((err, photos) => {
   // , config.imagesPerPage
 });
 
-
-const cleanOld = () => {
-  console.log('cleanOld');
-  const { imagesPerPage } = config;
-
-  db.photos.count({}, (countErr, photosCount) => {
-    if (countErr) throw new Error(countErr);
-
-    console.log(`imagesPerPage: ${imagesPerPage}`);
-    console.log(`photosCount: ${photosCount}`);
-
-    if (photosCount > imagesPerPage) {
-      db.photos.find({}).sort({ date: -1 }).skip(imagesPerPage).exec((findErr, photosOverflow) => {
-        if (findErr) throw new Error(findErr);
-
-        console.log(`photosOverflow (${photosOverflow.length})`);
-
-        photosOverflow.forEach(async (photo) => {
-          // remove foto from db
-          await db.photos.remove({ _id: photo._id });
-
-          // remove files of photo
-          console.log(`Gonna be deleted ${path.join(imagesDirPath, photo.src)}`);
-          fs.unlink(path.join(imagesDirPath, photo.src), (err) => {
-            if (err) console.error(err);
-            console.log(`Overflowed file ${photo.src} is deleted`);
-          });
-
-          console.log(`Gonna be deleted ${path.join(imagesDirPath, photo.thumb)}`);
-          fs.unlink(path.join(imagesDirPath, photo.thumb), (err) => {
-            if (err) console.error(err);
-            console.log(`Overflowed file ${photo.thumb} is deleted`);
-          });
-        });
-      });
-    }
-  });
-};
-
-const cleanOldThrottled = _.throttle(cleanOld, 5000);
-
 can.on('photo:new', async (data) => {
   db.photos.insert(data, () => {
     // remove over limit
     can.emit('photos:sync');
-    cleanOldThrottled();
+    can.emit('cleanup:overflowed');
   });
 });
 
@@ -237,3 +197,4 @@ can.on('config:sync', (socket = io) => {
 
 
 watcher({ ...config, imagesDirPath }, db.photos, can);
+autocleaner({ ...config, imagesDirPath }, db.photos, can);

@@ -27,12 +27,19 @@ const config = {
     height: 200
   },
 
-  // daysToDelete: 1, // if defined and greater than 0 - delete
-  // hoursOfDeleteCheck: 1,
+  deleteOverflowed: true,
+  deleteOutdated: false,
+  daysToDelete: 1, // if defined and greater than 0 - delete
+  hoursOfDeleteCheck: 1,
+
+  // for outdated delete fasten tests
+  // daysToDelete: 0.005,
+  // hoursOfDeleteCheck: 0.2,
+
   deleteAfterImport: true,
   useWatchFile: false,
 
-  imagesPerPage: 3,
+  imagesPerPage: 100,
   viewerCloseAfter: 35,
   emailFormCloseAfter: 60,
 
